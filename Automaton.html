@@ -152,15 +152,15 @@
               }
             }
             document.getElementById('edge-operation').innerHTML = "Add Edge";
-            document.getElementById('edge-arrows-row').style.display = 'none';
+            // document.getElementById('edge-arrows-row').style.display = 'none';
             document.getElementById('edge-arrows').value = 'to';
             editEdgeWithoutDrag(data, callback);
           },
           editEdge: {
             editWithoutDrag: function(data, callback) {
               document.getElementById('edge-operation').innerHTML = "Edit Edge";
-              document.getElementById('edge-arrows-row').style.display = '';
-              document.getElementById('edge-arrows').value = data.arrows;
+              // document.getElementById('edge-arrows-row').style.display = '';
+              document.getElementById('edge-arrows').value = 'to';
               console.log(data);
               editEdgeWithoutDrag(data,callback);
             }
@@ -168,6 +168,7 @@
         }
       };
       network = new vis.Network(container, dataSet, options);
+      console.log(network.body.data);
     }
 
     function editNode(data, callback) {
@@ -192,6 +193,13 @@
     function saveNodeData(data, callback) {
       data.nodeId = document.getElementById('node-id').value;
       data.label = document.getElementById('node-label').value;
+      if (data.nodeId == "start") {
+        data.color = "green";
+      }else if (data.nodeId == "end") {
+        data.color = "red";
+      }else{
+        data.color = null;
+      };
       clearNodePopUp();
       callback(data);
     }
@@ -199,12 +207,9 @@
     function editEdgeWithoutDrag(data, callback) {
       // filling in the popup DOM elements
       document.getElementById('edge-label').value = data.label;
-      // document.getElementById('edge-arrows').value = data.arrows;
       document.getElementById('edge-saveButton').onclick = saveEdgeData.bind(this, data, callback);
       document.getElementById('edge-cancelButton').onclick = cancelEdgeEdit.bind(this,callback);
       document.getElementById('edge-popUp').style.display = 'block';
-      console.log("network");
-      console.log(network);
     }
 
     function clearEdgePopUp() {
@@ -276,7 +281,7 @@
     <tr>
       <td>label</td><td><input id="edge-label" value="new value" /></td>
     </tr>
-    <tr id="edge-arrows-row">
+    <tr style="display: none;">
       <td>arrows</td><td><input id="edge-arrows" value="to" /></td>
     </tr>
   </table>
