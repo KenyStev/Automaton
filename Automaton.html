@@ -68,8 +68,9 @@
       text-align: center;
     }
   </style>
-  <script type="text/javascript" src="./dist/vis.js"></script>
-  <link href="./dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="./js/jQuery_v3_1_1.js"></script>
+  <script type="text/javascript" src="./js/vis/vis.js"></script>
+  <link href="./js/vis/vis-network.min.css" rel="stylesheet" type="text/css" />
 
   <script type="text/javascript">
     // create an array with nodes
@@ -168,7 +169,7 @@
         }
       };
       network = new vis.Network(container, dataSet, options);
-      console.log(network.body.data);
+      console.log(objectToArray(network.body.data.nodes._data));
     }
 
     function editNode(data, callback) {
@@ -202,6 +203,7 @@
       };
       clearNodePopUp();
       callback(data);
+      console.log(network.body.data);
     }
 
     function editEdgeWithoutDrag(data, callback) {
@@ -232,6 +234,10 @@
       data.arrows = document.getElementById('edge-arrows').value;
       clearEdgePopUp();
       callback(data);
+    }
+
+    function objectToArray(obj) {
+      return Object.keys(obj).map(function (key) { return obj[key]; });
     }
 
     function init() {
