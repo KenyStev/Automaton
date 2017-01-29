@@ -1,13 +1,16 @@
 export default class Automaton {
-	alphabet = []
+	alphabet = undefined
 	states = []
 	constructor(name, alphabet){
 		this.name = name
-		this.alphabet = alphabet
+		this.setAlphabet(alphabet)
 	}
 
 	setAlphabet(alphabet) {
-		this.alphabet = alphabet
+		this.alphabet = new Set()
+		alphabet.forEach(c => {
+			this.alphabet.add(c)
+		})
 	}
 
 	addState(state) {
@@ -17,6 +20,10 @@ export default class Automaton {
 	addTransition(transition) {
 		const from = this.states.filter(e => e.label == transition.from)[0]
 		from.addTransition(transition)
+	}
+
+	findState(stateName) {
+		return this.states.filter(e => e.label == stateName)[0];
 	}
 }
 
@@ -38,5 +45,14 @@ export class Transition {
 		this.label = label
 		this.from = from
 		this.to = to
+	}
+
+	match(a) {
+		for(let e of this.label.split(/,|\//))
+		{
+			if (e == a) 
+				return true
+		}
+		return false
 	}
 }
