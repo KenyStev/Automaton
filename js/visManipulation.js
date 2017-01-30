@@ -38,8 +38,8 @@ var edges = [
 var network = null;
 // randomly create some nodes and edges
 var dataSet = {
-    nodes: nodes,
-    edges: edges
+    nodes: [],
+    edges: []
   };//getScaleFreeNetwork(25);
 var seed = 2;
 
@@ -64,8 +64,6 @@ function destroy() {
 
 function draw() {
   destroy();
-  nodes = [];
-  edges = [];
 
   // create a network
   var container = document.getElementById('mynetwork');
@@ -197,6 +195,16 @@ function evaluate(event){
 		<h5>is final: ${finalState.isFinal}</h5>
 	`
 	// console.log(automaton.match(word))
+}
+
+function fillExample(event){
+	dataSet = {
+		nodes: nodes,
+		edges: edges
+	}
+	document.getElementById('automaton-alphabet').value = "0,1"
+	document.getElementById('automaton-word').value = "01100101000101"
+	draw()
 }
 
 function init() {
