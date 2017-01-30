@@ -190,7 +190,13 @@ function evaluate(event){
 	let word = document.getElementById('automaton-word').value
 
 	let automaton = AutomatonJS.NewDFA(network.body.data,"nuevo",alphabet)
-	console.log(automaton.match(word))
+
+	let finalState = automaton.match(word)
+	document.getElementById('show-message').innerHTML = `
+		<h5>state label: ${finalState.label}</h5>
+		<h5>is final: ${finalState.isFinal}</h5>
+	`
+	// console.log(automaton.match(word))
 }
 
 function init() {
