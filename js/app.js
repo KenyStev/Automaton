@@ -1,36 +1,36 @@
-import DFA from "./DFA.js"
+import DFA from "./DFA"
+import NewDFA from "./AutomatonFactory"
 
-const autom = new DFA("dfa", ['0','1'])
-// autom.addState(new State("q0",true))
-// autom.addState(new State("q1"))
-// autom.addState(new State("q2",false,true))
+exports.NewDFA = NewDFA;
 
-// autom.addTransition(new Transition("0","q0","q1"))
-// autom.addTransition(new Transition("0","q1","q2"))
-// autom.addTransition(new Transition("1","q1","q0"))
+// (function(){
+// 	document.getElementById('send-automaton').attachEvent('onclick',e => {
+// 		let alphabet = document.getElementById('automaton-alphabet').value;
+// 		alphabet = alphabet.split(/ |\/.,/)
+// 		let word = document.getElementById('automaton-word').value
 
-autom.addState('q0', true)
-autom.addState('0', true)
-autom.addState('00', true)
-autom.addState('000', false, true)
+// 		let automaton = NewDFA(network.body.data,"nuevo",alphabet)
 
-autom.addTransition('1','q0','q0')
-autom.addTransition('0','q0','0')
-autom.addTransition('1','0','q0')
-autom.addTransition('0','0','00')
-autom.addTransition('1','00','q0')
-autom.addTransition('0','00','000')
-autom.addTransition('0/1','000','000')
+// 		console.log(automaton.match(word))
+// 	})
+// })
 
-// autom.addState("q0",true)
-// autom.addState("q1")
-// autom.addState("q2",false,true)
+// const autom = new DFA("dfa", ['0','1'])
 
-// autom.addTransition("0","q0","q1")
-// autom.addTransition("0","q1","q2")
-// autom.addTransition("1","q1","q0")
+// autom.addState('q0', true)
+// autom.addState('0', true)
+// autom.addState('00', true)
+// autom.addState('000', false, true)
 
-console.log(autom)
-console.log("autom")
-console.log(autom.match("0100101011"))
-console.log(autom.match("01000101011"))
+// autom.addTransition('1','q0','q0')
+// autom.addTransition('0','q0','0')
+// autom.addTransition('1','0','q0')
+// autom.addTransition('0','0','00')
+// autom.addTransition('1','00','q0')
+// autom.addTransition('0','00','000')
+// autom.addTransition('0/1','000','000')
+
+// console.log(JSON.stringify(autom))
+// console.log("autom")
+// console.log(autom.match("0100101011"))
+// console.log(autom.match("01000101011"))

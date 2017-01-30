@@ -5,7 +5,8 @@ module.exports = {
     entry: [ 'babel-polyfill', './js/app.js'],
     output: {
         path: __dirname,
-        filename: './dist/bundle.js'
+        filename: './dist/bundle.js',
+        library: 'AutomatonJS'
     },
     module: {
         loaders: [
