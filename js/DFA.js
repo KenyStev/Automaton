@@ -13,7 +13,7 @@ export default class DFA extends Automaton{
 		if(!this.findState(stateName)){
 			this.states.push(new State(stateName,isInitial,isFinal))
 		}else{
-			throw new StateAlreadyExistError(state.label)
+			throw new StateAlreadyExistError(stateName)
 		}
 	}
 

@@ -43,17 +43,17 @@ var dataSet = {
   };//getScaleFreeNetwork(25);
 var seed = 2;
 
-function setDefaultLocale() {
-  var defaultLocal = navigator.language;
-  var select = document.getElementById('locale');
-  select.selectedIndex = 0; // set fallback value
-  for (var i = 0, j = select.options.length; i < j; ++i) {
-    if (select.options[i].getAttribute('value') === defaultLocal) {
-      select.selectedIndex = i;
-      break;
-    }
-  }
-}
+// function setDefaultLocale() {
+//   var defaultLocal = navigator.language;
+//   var select = document.getElementById('locale');
+//   select.selectedIndex = 0; // set fallback value
+//   for (var i = 0, j = select.options.length; i < j; ++i) {
+//     if (select.options[i].getAttribute('value') === defaultLocal) {
+//       select.selectedIndex = i;
+//       break;
+//     }
+//   }
+// }
 
 function destroy() {
   if (network !== null) {
@@ -74,7 +74,7 @@ function draw() {
         to:     {enabled: true, scaleFactor:1, type:'arrow'}
       }
     },
-    locale: document.getElementById('locale').value,
+    locale: 'en', //document.getElementById('locale').value,
     manipulation: {
       addNode: function (data, callback) {
         // filling in the popup DOM elements
@@ -186,14 +186,21 @@ function evaluate(event){
 	alphabet = alphabet.split(',')
 	// console.log(alphabet)
 	let word = document.getElementById('automaton-word').value
+	let automaton = undefined
+	let finalState = undefined
 
-	let automaton = AutomatonJS.NewDFA(network.body.data,"nuevo",alphabet)
+	try {
+		automaton = AutomatonJS.NewDFA(network.body.data,"nuevo",alphabet)
+		finalState = automaton.match(word)
+		document.getElementById('show-message').innerHTML = `
+			<h5>state label: ${finalState.label}</h5>
+			<h5>is final: ${finalState.isFinal}</h5>
+		`
+	}
+	catch(err) {
+	    document.getElementById("show-message").innerHTML = `<h4 style="color:red;">${err.message}</h4>`;
+	}
 
-	let finalState = automaton.match(word)
-	document.getElementById('show-message').innerHTML = `
-		<h5>state label: ${finalState.label}</h5>
-		<h5>is final: ${finalState.isFinal}</h5>
-	`
 	// console.log(automaton.match(word))
 }
 
@@ -209,6 +216,6 @@ function fillExample(event){
 
 function init() {
 	// console.log(AutomatonJS);
-  setDefaultLocale();
+  // setDefaultLocale();
   draw();
 }
