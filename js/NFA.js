@@ -34,8 +34,7 @@ export default class NFA extends Automaton{
 	}
 
 	match(w,currentState){
-		console.log(currentState)
-		console.log(`W: ${w} - len: ${w.length} state: ${currentState.label}`)
+		// console.log(`W: ${w} - len: ${w.length} state: ${currentState.label}`)
 		if (w.length>0) {
 			let a = w.charAt(0)
 			let transitions = currentState.transitions.filter(e => e.match(a))

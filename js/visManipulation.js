@@ -180,18 +180,30 @@ function objectToArray(obj) {
   return Object.keys(obj).map(function (key) { return obj[key]; });
 }
 
-function evaluate(event){
+function evaluateDfa(event){
+  evaluate(event,"DFA")
+}
+
+function evaluateNfa(event){
+  evaluate(event,"NFA")
+}
+
+function evaluate(event,mode){
 	let alphabet = document.getElementById('automaton-alphabet').value
-	// console.log(alphabet)
 	alphabet = alphabet.split(',')
-	// console.log(alphabet)
 	let word = document.getElementById('automaton-word').value
 	let automaton = undefined
 	let finalState = undefined
 
 	try {
-		automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet)
-		finalState = automaton.match(word,automaton.getInitialState())
+		if (mode == "DFA"){
+      automaton = AutomatonJS.NewDFA(network.body.data,"nuevo",alphabet)
+  		finalState = automaton.match(word)
+    }else if (mode == "NFA"){
+      automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet)
+      finalState = automaton.match(word,automaton.getInitialState())
+    }
+
 		document.getElementById('show-message').innerHTML = `
 			<h5>state label: ${finalState.label}</h5>
 			<h5>is final: ${finalState.isFinal}</h5>
@@ -200,8 +212,6 @@ function evaluate(event){
 	catch(err) {
 	    document.getElementById("show-message").innerHTML = `<h4 style="color:red;">${err.message}</h4>`;
 	}
-
-	// console.log(automaton.match(word))
 }
 
 function fillExample(event){

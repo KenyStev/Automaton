@@ -19,13 +19,17 @@
 <div id="automaton">
   <label>alphabet: </label><input id="automaton-alphabet" value="" />
   <label>word to try: </label><input id="automaton-word" value="" />
-  <div id="send-automaton" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate</div>
+  <div id="send-automaton-dfa" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate DFA</div>
+  <div id="send-automaton-nfa" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate NFA</div>
   <div id="load-example" style="width:auto; height:25px; color:green; cursor:pointer;">Example</div>
 </div>
 
 <script type="text/javascript">
-  $('#send-automaton').on('click', e => {
-    evaluate(e)
+  $('#send-automaton-dfa').on('click', e => {
+    evaluateDfa(e)
+  })
+  $('#send-automaton-nfa').on('click', e => {
+    evaluateNfa(e)
   })
   $('#load-example').on('click', e => {
     fillExample(e)
