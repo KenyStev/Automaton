@@ -25,6 +25,11 @@ export default class Automaton {
 	findState(stateName) {
 		return this.states.filter(e => e.label == stateName)[0];
 	}
+
+	getInitialState(){
+		let currentState = this.states.filter(e => e.isInitial)[0]
+		return currentState
+	}
 }
 
 export class State {

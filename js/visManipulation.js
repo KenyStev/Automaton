@@ -190,8 +190,8 @@ function evaluate(event){
 	let finalState = undefined
 
 	try {
-		automaton = AutomatonJS.NewDFA(network.body.data,"nuevo",alphabet)
-		finalState = automaton.match(word)
+		automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet)
+		finalState = automaton.match(word,automaton.getInitialState())
 		document.getElementById('show-message').innerHTML = `
 			<h5>state label: ${finalState.label}</h5>
 			<h5>is final: ${finalState.isFinal}</h5>

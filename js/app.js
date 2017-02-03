@@ -1,8 +1,10 @@
 import DFA from "./DFA"
-import NewDFA from "./AutomatonFactory"
+import NFA from "./NFA"
+import {NewDFA, NewNFA} from "./AutomatonFactory"
 // import vis from "../node_modules/vis"
 
 exports.NewDFA = NewDFA;
+exports.NewNFA = NewNFA;
 
 // var container = document.getElementById('myNetwork')
 
