@@ -30,6 +30,19 @@ export default class Automaton {
 		let currentState = this.states.filter(e => e.isInitial)[0]
 		return currentState
 	}
+
+	toDataSet(){
+		let nodes = []
+		let edges = []
+		this.states.map(x => {
+			nodes.push({nodeId: `${x.isInitial?'start':''}/${x.isFinal?'end':''}`,
+				id: x.label, label: x.label, color: getStateColor(x)})
+			x.transitions.map(t => {
+				edges.push({from: t.from, to: t.to, label: t.label, font: {align: 'middle'}})
+			})
+		})
+		return {nodes: nodes, edges: edges}
+	}
 }
 
 export class State {
@@ -60,4 +73,15 @@ export class Transition {
 		}
 		return false
 	}
+}
+
+function getStateColor(state) {
+	let colorGreen = '00'
+	let colorRed = '00'
+	if (state.isInitial)
+		colorGreen = 'ff'
+	if (state.isFinal)
+		colorRed = 'ff'
+	let color = "#" + colorRed + colorGreen + "00"
+	return (color=="#000000")?undefined:color
 }

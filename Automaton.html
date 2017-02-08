@@ -21,6 +21,7 @@
   <label>word to try: </label><input id="automaton-word" value="" />
   <div id="send-automaton-dfa" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate DFA</div>
   <div id="send-automaton-nfa" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate NFA</div>
+  <div id="send-automaton-nfae" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate NFA-e</div>
   <div id="load-example" style="width:auto; height:25px; color:green; cursor:pointer;">Example</div>
 </div>
 
@@ -30,6 +31,9 @@
   })
   $('#send-automaton-nfa').on('click', e => {
     evaluateNfa(e)
+  })
+  $('#send-automaton-nfae').on('click', e => {
+    evaluateNfae(e)
   })
   $('#load-example').on('click', e => {
     fillExample(e)

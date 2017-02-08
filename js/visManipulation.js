@@ -188,6 +188,10 @@ function evaluateNfa(event){
   evaluate(event,"NFA")
 }
 
+function evaluateNfae(event){
+  evaluate(event,"NFAe")
+}
+
 function evaluate(event,mode){
 	let alphabet = document.getElementById('automaton-alphabet').value
 	alphabet = alphabet.split(',')
@@ -202,6 +206,9 @@ function evaluate(event,mode){
     }else if (mode == "NFA"){
       automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet)
       finalState = automaton.match(word,automaton.getInitialState())
+    }else if (mode == "NFAe"){
+      automaton = AutomatonJS.NewNFAe(network.body.data,"nuevo",alphabet)
+      finalState = automaton.match(word,[automaton.getInitialState()])
     }
 
 		document.getElementById('show-message').innerHTML = `
@@ -215,12 +222,10 @@ function evaluate(event,mode){
 }
 
 function fillExample(event){
-	dataSet = {
-		nodes: nodes,
-		edges: edges
-	}
-	document.getElementById('automaton-alphabet').value = "0,1"
-	document.getElementById('automaton-word').value = "01100101000101"
+  let exampleA = AutomatonJS.examples.getNFAe()
+	dataSet = exampleA.toDataSet()
+	document.getElementById('automaton-alphabet').value = Array.from(exampleA.alphabet).join(",")
+	document.getElementById('automaton-word').value = ""
 	draw()
 }
 

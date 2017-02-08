@@ -48,7 +48,7 @@ export default class NFA extends Automaton{
 					for(let state of statesTo){
 						if (!returnState){
 							returnState = this.match(w.substring(1,w.length),state)
-							if (!returnState.isFinal)
+							if (returnState!=null && !returnState.isFinal)
 								returnState = null
 						}
 					}
