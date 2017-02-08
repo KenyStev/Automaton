@@ -4,6 +4,8 @@
   <meta charset="utf-8"/>
   <title>Automaton | Kevin Estevez</title>
 
+  <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./bootflat/css/bootflat.min.css">
   <link rel="stylesheet" type="text/css" href="./css/automatonGUI.css">
 
   <script type="text/javascript" src="./js/jQuery_v3_1_1.js"></script>
@@ -16,13 +18,25 @@
 
 <body onload="init();">
 
-<div id="automaton">
-  <label>alphabet: </label><input id="automaton-alphabet" value="" />
-  <label>word to try: </label><input id="automaton-word" value="" />
-  <div id="send-automaton-dfa" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate DFA</div>
-  <div id="send-automaton-nfa" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate NFA</div>
-  <div id="send-automaton-nfae" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate NFA-e</div>
-  <div id="load-example" style="width:auto; height:25px; color:green; cursor:pointer;">Example</div>
+<div class="container">
+  <div class="row">
+      <h3 class="text-center">Automaton</h3>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div id="mynetwork"></div>
+    </div>
+    <div class="col-md-6">
+      <div id="automaton">
+      <h6>alphabet: <input id="automaton-alphabet" value="" /></h6>
+      <h6>word to try: <input id="automaton-word" value="" /></h6>
+      <div id="send-automaton-dfa" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate DFA</div>
+      <div id="send-automaton-nfa" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate NFA</div>
+      <div id="send-automaton-nfae" style="width:auto; height:25px; color:blue; cursor:pointer;">Evaluate NFA-e</div>
+      <div id="load-example" style="width:auto; height:25px; color:green; cursor:pointer;">Example</div>
+    </div>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">
@@ -70,6 +84,5 @@
 
 <br />
 <div id="show-message"></div>
-<div id="mynetwork"></div>
 </body>
 </html>
