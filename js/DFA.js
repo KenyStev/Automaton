@@ -32,7 +32,12 @@ export default class DFA extends Automaton{
 		if (!this.isDeterministic(from,transitionName))
 			throw new DeterminismError(fromName,transitionName)
 
-		from.addTransition(new Transition(transitionName,fromName,toName))
+		let existTransFromTo = from.transitions.filter(x => x.to == toName)[0]
+
+		if (existTransFromTo)
+			existTransFromTo.label += "/" + transitionName
+		else
+			from.addTransition(new Transition(transitionName,fromName,toName))
 	}
 
 	isDeterministic(from, a) {

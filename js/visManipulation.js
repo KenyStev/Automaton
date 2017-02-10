@@ -10,31 +10,7 @@ function getStateColor(state) {
 	return color
 }
 
-// create an array with nodes
-var nodes = [
-  {id: 1, label: 'q0', nodeId: 'start'},
-  {id: 2, label: '0', nodeId: 2},
-  {id: 3, label: '00', nodeId: 3},
-  {id: 4, label: '000', nodeId: 'end'}
-];
-
-nodes.map(val => {
-	let color = getStateColor(val)
-
-	if (color != '#000000')
-		val.color = color
-})
-
-// create an array with edges
-var edges = [
-  {from: 1, to: 1, label: '1', font: {align: 'middle'}},
-  {from: 1, to: 2, label: '0', font: {align: 'middle'}},
-  {from: 2, to: 1, label: '1', font: {align: 'middle'}},
-  {from: 2, to: 3, label: '0', font: {align: 'middle'}},
-  {from: 3, to: 1, label: '1', font: {align: 'middle'}},
-  {from: 3, to: 4, label: '0', font: {align: 'middle'}},
-  {from: 4, to: 4, label: '0/1', font: {align: 'middle'}}
-];
+var currentAutomaton = undefined
 var network = null;
 // randomly create some nodes and edges
 var dataSet = {
@@ -42,18 +18,6 @@ var dataSet = {
     edges: []
   };//getScaleFreeNetwork(25);
 var seed = 2;
-
-// function setDefaultLocale() {
-//   var defaultLocal = navigator.language;
-//   var select = document.getElementById('locale');
-//   select.selectedIndex = 0; // set fallback value
-//   for (var i = 0, j = select.options.length; i < j; ++i) {
-//     if (select.options[i].getAttribute('value') === defaultLocal) {
-//       select.selectedIndex = i;
-//       break;
-//     }
-//   }
-// }
 
 function destroy() {
   if (network !== null) {
@@ -209,8 +173,9 @@ function evaluate(event,mode){
     }else if (mode == "NFAe"){
       automaton = AutomatonJS.NewNFAe(network.body.data,"nuevo",alphabet)
       finalState = automaton.match(word,[automaton.getInitialState()])
-      automaton.toDFA()
     }
+
+    currentAutomaton = automaton
 
 		document.getElementById('show-message').innerHTML = `
       <div class="alert ${finalState.isFinal?'alert-success alert-dismissable':'alert-danger'}">
@@ -226,7 +191,6 @@ function evaluate(event,mode){
         <strong>Invalid!</strong> 
         ${showMessageError(err)}
       </div>`;
-      console.log(err)
 	}
 }
 
@@ -260,6 +224,30 @@ function fillExample(event,mode){
 	document.getElementById('automaton-alphabet').value = Array.from(exampleA.alphabet).join(",")
 	document.getElementById('automaton-word').value = ""
 	draw()
+  currentAutomaton = exampleA
+}
+
+function convertNFAToDFA(event){
+  convertToDFA(event,"NFA")
+}
+
+function convertNFAeToDFA(event){
+  convertToDFA(event,"NFAe")
+}
+
+function convertToDFA(event,mode){
+  let alphabet = document.getElementById('automaton-alphabet').value
+  alphabet = alphabet.split(',')
+
+  let automaton = undefined
+  if (mode=="NFA")
+    automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet)
+  else if (mode=="NFAe")
+    automaton = AutomatonJS.NewNFAe(network.body.data,"nuevo",alphabet)
+
+  currentAutomaton = automaton.toDFA()
+  dataSet = currentAutomaton.toDataSet()
+  draw()
 }
 
 function init() {
@@ -288,4 +276,12 @@ $('#load-example-nfa').on('click', e => {
 
 $('#load-example-nfae').on('click', e => {
   fillExampleNfae(e)
+})
+
+$('#convert-nfa-dfa').on('click', e => {
+  convertNFAToDFA(e)
+})
+
+$('#convert-nfae-dfa').on('click', e => {
+  convertNFAeToDFA(e)
 })
