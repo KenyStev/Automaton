@@ -27,59 +27,65 @@
       <div id="show-message"></div>
 
       <div id="automaton">
-      <input id="automaton-alphabet" class="form-control" value="" placeholder="alphabet"/>
-      <input id="automaton-word" class="form-control" value="" placeholder="word to try"/>
+        <input id="automaton-alphabet" class="form-control" value="" placeholder="alphabet"/>
+        <input id="automaton-word" class="form-control" value="" placeholder="word to try"/>
 
-      <div class="panel-group panel-group-lists collapse in" id="accordion2" style="">
-        <div class="panel">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFour" class="collapsed">
-                DFA
-              </a>
-            </h4>
-          </div>
-          <div id="collapseFour" class="panel-collapse collapse" style="height: 0px;">
-            <div class="panel-body">
-              <button id="send-automaton-dfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
-              <button id="load-example-dfa" type="button" class="btn btn-info btn-block">Example</button>
+        <div class="panel-group panel-group-lists collapse in" id="accordion2" style="">
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFour" class="collapsed">
+                  DFA
+                </a>
+              </h4>
+            </div>
+            <div id="collapseFour" class="panel-collapse collapse" style="height: 0px;">
+              <div class="panel-body">
+                <button id="save-dfa" type="button" class="btn btn-success btn-block">Save</button>
+                <button id="send-automaton-dfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
+                <button id="load-example-dfa" type="button" class="btn btn-info btn-block">Example</button>
+                <div id="dfa-automatons" class="row list-group"></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="panel">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFive" class="collapsed">
-                NFA
-              </a>
-            </h4>
-          </div>
-          <div id="collapseFive" class="panel-collapse collapse" style="height: 0px;">
-            <div class="panel-body">
-              <button id="send-automaton-nfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
-              <button id="load-example-nfa" type="button" class="btn btn-info btn-block">Example</button>
-              <button id="convert-nfa-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFive" class="collapsed">
+                  NFA
+                </a>
+              </h4>
+            </div>
+            <div id="collapseFive" class="panel-collapse collapse" style="height: 0px;">
+              <div class="panel-body">
+                <button id="save-nfa" type="button" class="btn btn-success btn-block">Save</button>
+                <button id="send-automaton-nfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
+                <button id="load-example-nfa" type="button" class="btn btn-info btn-block">Example</button>
+                <button id="convert-nfa-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
+                <div id="nfa-automatons" class="row list-group"></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="panel">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSix" class="collapsed">
-                NFA-e
-              </a>
-            </h4>
-          </div>
-          <div id="collapseSix" class="panel-collapse collapse">
-            <div class="panel-body">
-              <button id="send-automaton-nfae" type="button" class="btn btn-primary btn-block">Evaluate</button>
-              <button id="load-example-nfae" type="button" class="btn btn-info btn-block">Example</button>
-              <button id="convert-nfae-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSix" class="collapsed">
+                  NFA-e
+                </a>
+              </h4>
+            </div>
+            <div id="collapseSix" class="panel-collapse collapse">
+              <div class="panel-body">
+                <button id="save-nfae" type="button" class="btn btn-success btn-block">Save</button>
+                <button id="send-automaton-nfae" type="button" class="btn btn-primary btn-block">Evaluate</button>
+                <button id="load-example-nfae" type="button" class="btn btn-info btn-block">Example</button>
+                <button id="convert-nfae-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
+                <div id="nfae-automatons" class="row list-group"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
     <div class="col-md-6">
       <div id="mynetwork"></div>
@@ -119,5 +125,6 @@
 
 <script type="text/javascript" src="./js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./js/visManipulation.js"></script>
+<script type="text/javascript" src="./js/persistent.js"></script>
 </body>
 </html>
