@@ -30,15 +30,17 @@ automNFA.addTransition('0/1','q0','q0')
 automNFA.addTransition('0','q0','q1')
 automNFA.addTransition('1','q1','q2')
 
-// automNFA.addState('q0', true)
-// automNFA.addState('q1')
-// automNFA.addState('q2')
-// automNFA.addState('q3', false,true)
+const automNFA2 = new NFA("nfa", ['0','1'])
 
-// automNFA.addTransition('0/1','q0','q0')
-// automNFA.addTransition('1','q0','q1')
-// automNFA.addTransition('0/1','q1','q2')
-// automNFA.addTransition('0/1','q2','q3')
+automNFA2.addState('q0', true)
+automNFA2.addState('q1')
+automNFA2.addState('q2')
+automNFA2.addState('q3', false,true)
+
+automNFA2.addTransition('0/1','q0','q0')
+automNFA2.addTransition('1','q0','q1')
+automNFA2.addTransition('0/1','q1','q2')
+automNFA2.addTransition('0/1','q2','q3')
 
 const automNFAe = new NFAe("nfae", ['0','1','2','3','4','5','6','7','8','9','-','.'])
 const automNFAe_str1 = "5.08"
@@ -75,26 +77,28 @@ automNFAe_dfa.addTransition('epsilon','q5','q1')
 automNFAe_dfa.addTransition('0','q2','q2')
 automNFAe_dfa.addTransition('epsilon/1','q2','q3')
 
-// automNFAe_dfa.addState('q0',true)
-// automNFAe_dfa.addState('q1',false,true)
-// automNFAe_dfa.addState('q2')
-// automNFAe_dfa.addState('q3')
-// automNFAe_dfa.addState('q4',false,true)
+const automNFAe_dfa2 = new NFAe("nfae",['0','1'])
 
-// automNFAe_dfa.addTransition('1','q0','q1')
-// automNFAe_dfa.addTransition('epsilon','q0','q2')
-// automNFAe_dfa.addTransition('epsilon','q2','q3')
-// automNFAe_dfa.addTransition('epsilon','q3','q4')
-// automNFAe_dfa.addTransition('0','q4','q4')
+automNFAe_dfa2.addState('q0',true)
+automNFAe_dfa2.addState('q1',false,true)
+automNFAe_dfa2.addState('q2')
+automNFAe_dfa2.addState('q3')
+automNFAe_dfa2.addState('q4',false,true)
+
+automNFAe_dfa2.addTransition('1','q0','q1')
+automNFAe_dfa2.addTransition('epsilon','q0','q2')
+automNFAe_dfa2.addTransition('epsilon','q2','q3')
+automNFAe_dfa2.addTransition('epsilon','q3','q4')
+automNFAe_dfa2.addTransition('0','q4','q4')
 
 exports.getDFA = function getDFA(){
-	return automDFA
+	return [automDFA]
 }
 
 exports.getNFA = function getNFA(){
-	return automNFA
+	return [automNFA,automNFA2]
 }
 
 exports.getNFAe = function getNFAe(){
-	return automNFAe_dfa//automNFAe
+	return [automNFAe,automNFAe_dfa,automNFAe_dfa2]
 }

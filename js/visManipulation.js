@@ -200,33 +200,6 @@ function showMessageError(err){
   return ""
 }
 
-function fillExampleDfa(event){
-  fillExample(event,"DFA")
-}
-
-function fillExampleNfa(event){
-  fillExample(event,"NFA")
-}
-
-function fillExampleNfae(event){
-  fillExample(event,"NFAe")
-}
-
-function fillExample(event,mode){
-  let exampleA = undefined
-  if (mode=="DFA")
-    exampleA = AutomatonJS.examples.getDFA()
-  else if (mode=="NFA")
-    exampleA = AutomatonJS.examples.getNFA()
-  else if (mode=="NFAe")
-    exampleA = AutomatonJS.examples.getNFAe()
-	dataSet = exampleA.toDataSet()
-	document.getElementById('automaton-alphabet').value = Array.from(exampleA.alphabet).join(",")
-	document.getElementById('automaton-word').value = ""
-	draw()
-  currentAutomaton = exampleA
-}
-
 function convertNFAToDFA(event){
   convertToDFA(event,"NFA")
 }
@@ -264,18 +237,6 @@ $('#send-automaton-nfa').on('click', e => {
 })
 $('#send-automaton-nfae').on('click', e => {
   evaluateNfae(e)
-})
-
-$('#load-example-dfa').on('click', e => {
-  fillExampleDfa(e)
-})
-
-$('#load-example-nfa').on('click', e => {
-  fillExampleNfa(e)
-})
-
-$('#load-example-nfae').on('click', e => {
-  fillExampleNfae(e)
 })
 
 $('#convert-nfa-dfa').on('click', e => {

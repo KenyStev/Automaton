@@ -1,6 +1,10 @@
-var dfa_automatons = []
-var nfa_automatons = []
-var nfae_automatons = []
+var dfa_automatons = AutomatonJS.examples.getDFA()
+var nfa_automatons = AutomatonJS.examples.getNFA()
+var nfae_automatons = AutomatonJS.examples.getNFAe()
+
+updateList("DFA")
+updateList("NFA")
+updateList("NFAe")
 
 function saveAutomaton (mode) {
 	let alphabet = document.getElementById('automaton-alphabet').value
@@ -60,13 +64,17 @@ function generateItems(data,mode){
 }
 
 function loadAutomaton(id,mode){
+	let example = undefined
 	if (mode=="DFA")
-		dataSet = dfa_automatons[id].toDataSet()
+		example = dfa_automatons[id]
 	else if (mode=="NFA")
-		dataSet = nfa_automatons[id].toDataSet()
+		example = nfa_automatons[id]
 	else if (mode=="NFAe")
-		dataSet = nfae_automatons[id].toDataSet()
+		example = nfae_automatons[id]
+	dataSet = example.toDataSet()
 	draw()
+	document.getElementById('automaton-alphabet').value = Array.from(example.alphabet).join(",")
+	currentAutomaton = example
 }
 
 $('#save-dfa').on('click',e => {
