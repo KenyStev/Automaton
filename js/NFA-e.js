@@ -9,6 +9,11 @@ import { UnknownCharError,
 
 const epsilon = "epsilon"
 
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this
+    return target.split(search).join(replacement)
+}
+
 export default class NFAe extends Automaton{
 	constructor(name, alphabet){super(name, alphabet)}
 
@@ -73,7 +78,7 @@ export default class NFAe extends Automaton{
 	toDFA(){
 		let newStates = new Set()
 		let initialState = this.getInitialState()
-		newStates.add(this.clausura(initialState).map(x => x.label).join(','))
+		newStates.add(this.clausura(initialState).map(x => x.label).sort().join('|'))
 		
 		let alphabet = Array.from(this.alphabet)
 		let stateTable = []
@@ -93,24 +98,45 @@ export default class NFAe extends Automaton{
 			}
 			x += 1
 		}
-		console.log(newStates)
-		console.log(stateTable)
+		newStates = Array.from(newStates)
+		let newDFA = new DFA(this.name+"-toDFA",alphabet)
+		newDFA.addState(normalizeState(newStates[0]),true)
+		for (let i = 1; i < newStates.length; i++) {
+			newDFA.addState(normalizeState(newStates[i]),false,lookForFinal(this,newStates[i]))
+		}
+
+		for(let i = 0; i < stateTable.length; i++){
+			for(let j = 0; j < stateTable[i].length; j++){
+				if (stateTable[i][j])
+					newDFA.addTransition(alphabet[j],normalizeState(newStates[i]),normalizeState(stateTable[i][j]))
+			}
+		}
+
+		return newDFA
 	}
+}
+
+function normalizeState(state){
+	return "{"+state.replaceAll('|',',')+"}"
 }
 
 function getStateTo(nfae,state,a) {
 	let statesTo = new Set()
 
-	let statesLabes = state.split(',')
+	let statesLabes = state.split('|')
 	for(let s of statesLabes){
 		let Astate = nfae.findState(s)
 
 		if (Astate) {
-			Astate.transitions.filter(x => x.label == a).forEach(t => {
+			Astate.transitions.filter(x => x.match(a)).forEach(t => {
 				nfae.clausura(nfae.findState(t.to)).map(s => s.label).forEach(c => statesTo.add(c))
 			})
 		}
 	}
 
-	return Array.from(statesTo).join(',')
+	return Array.from(statesTo).sort().join('|')
+}
+
+function lookForFinal(nfae,state){
+	return state.split('|').map(x => nfae.findState(x)).filter(x => x.isFinal).length>0
 }
