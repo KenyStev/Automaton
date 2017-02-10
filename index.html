@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Automaton | Kevin Estevez</title>
+
+  <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="./bootflat/css/bootflat.min.css">
+  <link rel="stylesheet" type="text/css" href="./css/automatonGUI.css">
+
+  <script type="text/javascript" src="./js/jQuery_v3_1_1.js"></script>
+  <script type="text/javascript" src="./dist/bundle.js" charset="utf-8"></script>
+  <script type="text/javascript" src="./js/vis/vis.js"></script>
+  
+  <link href="./js/vis/vis-network.min.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body onload="init();">
+
+<div class="container">
+  <div class="row">
+      <h3 class="text-center">Automaton</h3>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div id="show-message"></div>
+
+      <div id="automaton">
+      <input id="automaton-alphabet" class="form-control" value="" placeholder="alphabet"/>
+      <input id="automaton-word" class="form-control" value="" placeholder="word to try"/>
+
+      <div class="panel-group panel-group-lists collapse in" id="accordion2" style="">
+        <div class="panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFour" class="collapsed">
+                DFA
+              </a>
+            </h4>
+          </div>
+          <div id="collapseFour" class="panel-collapse collapse" style="height: 0px;">
+            <div class="panel-body">
+              <button id="send-automaton-dfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
+              <button id="load-example-dfa" type="button" class="btn btn-info btn-block">Example</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFive" class="collapsed">
+                NFA
+              </a>
+            </h4>
+          </div>
+          <div id="collapseFive" class="panel-collapse collapse" style="height: 0px;">
+            <div class="panel-body">
+              <button id="send-automaton-nfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
+              <button id="load-example-nfa" type="button" class="btn btn-info btn-block">Example</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSix" class="collapsed">
+                NFA-e
+              </a>
+            </h4>
+          </div>
+          <div id="collapseSix" class="panel-collapse collapse">
+            <div class="panel-body">
+              <button id="send-automaton-nfae" type="button" class="btn btn-primary btn-block">Evaluate</button>
+              <button id="load-example-nfae" type="button" class="btn btn-info btn-block">Example</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="col-md-6">
+      <div id="mynetwork"></div>
+    </div>
+  </div>
+</div>
+
+<div id="node-popUp">
+  <span id="node-operation">node</span> <br>
+  <table style="margin:auto;">
+    <tr>
+      <td>id</td><td><input id="node-id" value="new value" /></td>
+    </tr>
+    <tr>
+      <td>label</td><td><input id="node-label" value="new value" /></td>
+    </tr>
+  </table>
+  <input type="button" value="save" id="node-saveButton" />
+  <input type="button" value="cancel" id="node-cancelButton" />
+</div>
+
+<div id="edge-popUp">
+  <span id="edge-operation">edge</span> <br>
+  <table style="margin:auto;">
+    <tr>
+      <td>label</td><td><input id="edge-label" value="new value" /></td>
+    </tr>
+    <tr style="display: none;">
+      <td>arrows</td><td><input id="edge-arrows" value="to" /></td>
+    </tr>
+  </table>
+  <input type="button" value="save" id="edge-saveButton" />
+  <input type="button" value="cancel" id="edge-cancelButton" />
+</div>
+
+<br />
+
+<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./js/visManipulation.js"></script>
+</body>
+</html>
