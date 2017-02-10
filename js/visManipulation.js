@@ -104,14 +104,14 @@ function draw() {
           document.getElementById('edge-operation').innerHTML = "Edit Edge";
           // document.getElementById('edge-arrows-row').style.display = '';
           document.getElementById('edge-arrows').value = 'to';
-          console.log(data);
+          // console.log(data);
           editEdgeWithoutDrag(data,callback);
         }
       }
     }
   };
   network = new vis.Network(container, dataSet, options);
-  console.log(JSON.stringify(objectToArray(network.body.data.nodes._data)));
+  // console.log(JSON.stringify(objectToArray(network.body.data.nodes._data)));
 }
 
 function editNode(data, callback) {
@@ -213,13 +213,27 @@ function evaluate(event,mode){
     }
 
 		document.getElementById('show-message').innerHTML = `
-			<h5>state label: ${finalState.label}</h5>
-			<h5>is final: ${finalState.isFinal}</h5>
+      <div class="alert ${finalState.isFinal?'alert-success alert-dismissable':'alert-danger'}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>${finalState.isFinal?"Valid":"Invalid"}!</strong> Final State: ${finalState.label}.
+      </div>
 		`
 	}
 	catch(err) {
-	    document.getElementById("show-message").innerHTML = `<h4 style="color:red;">${err.message}</h4>`;
+	    document.getElementById("show-message").innerHTML = `
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Invalid!</strong> 
+        ${showMessageError(err)}
+      </div>`;
+      console.log(err)
 	}
+}
+
+function showMessageError(err){
+  if (err.message != "finalState is undefined")
+          return err.message + "."
+  return ""
 }
 
 function fillExampleDfa(event){

@@ -38,7 +38,7 @@ export default class NFA extends Automaton{
 		if (w.length>0) {
 			let a = w.charAt(0)
 			let transitions = currentState.transitions.filter(e => e.match(a))
-			if (transitions) {
+			if (transitions.length>0) {
 				let statesTo = []
 				for (let transition of transitions) {
 					statesTo.push(this.findState(transition.to))
@@ -54,6 +54,8 @@ export default class NFA extends Automaton{
 					}
 					return returnState
 				}
+			}else{
+				throw new NextTransitionError(a)
 			}
 		}
 		return currentState

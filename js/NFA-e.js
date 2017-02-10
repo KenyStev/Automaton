@@ -63,7 +63,8 @@ export default class NFAe extends Automaton{
 				let transitions = claus.transitions.filter(x => x.match(a))
 				transitions.forEach(t => statesTo.add(this.findState(t.to)))
 			})
-
+			if (statesTo.size==0)
+				throw new NextTransitionError(a)
 			return this.match(w.substring(1,w.length),Array.from(statesTo))
 		}
 		return clausuras.filter(x => x.isFinal)[0]
@@ -73,7 +74,7 @@ export default class NFAe extends Automaton{
 		let newStates = new Set()
 		let initialState = this.getInitialState()
 		newStates.add(this.clausura(initialState).map(x => x.label).join(','))
-		// console.log(newStates)
+		
 		let alphabet = Array.from(this.alphabet)
 		let stateTable = []
 
