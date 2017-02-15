@@ -167,6 +167,7 @@ function evaluate(event,mode){
 		if (mode == "DFA"){
       automaton = AutomatonJS.NewDFA(network.body.data,"nuevo",alphabet)
   		finalState = automaton.match(word)
+      automaton.toRE()
     }else if (mode == "NFA"){
       automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet)
       finalState = automaton.match(word,automaton.getInitialState())

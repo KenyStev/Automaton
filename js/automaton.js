@@ -1,3 +1,8 @@
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this
+    return target.split(search).join(replacement)
+}
+
 export default class Automaton {
 	alphabet = undefined
 	states = []
@@ -39,6 +44,18 @@ export default class Automaton {
 				id: x.label, label: x.label, color: getStateColor(x)})
 			x.transitions.map(t => {
 				edges.push({from: t.from, to: t.to, label: t.label, font: {align: 'middle'}})
+			})
+		})
+		return {nodes: nodes, edges: edges}
+	}
+
+	toData(){
+		let nodes = []
+		let edges = []
+		this.states.map(x => {
+			nodes.push({isInitial: x.isInitial, isFinal: x.isFinal, label: x.label})
+			x.transitions.map(t => {
+				edges.push({from: t.from, to: t.to, label: t.label})
 			})
 		})
 		return {nodes: nodes, edges: edges}

@@ -1,4 +1,5 @@
 import Automaton, {State, Transition} from "./automaton"
+import DFAre from "./DFA-RE"
 import { UnknownCharError, 
 		UnknownStateError, 
 		DeterminismError, 
@@ -58,4 +59,72 @@ export default class DFA extends Automaton{
 
 		return currentState
 	}
+
+	toRE(){
+		let stepByStep = []
+		let backAutomaton = new DFAre(this.name+"-re",Array.from(this.alphabet))
+		stepByStep.push(backAutomaton)
+
+		this.states.forEach(state => {
+			backAutomaton.addState(state.label,state.isInitial,state.isFinal)
+		})
+		this.states.forEach(state => {
+			state.transitions.forEach(trans => {
+				backAutomaton.addTransition(normalizeLabel(trans),trans.from,trans.to)
+			})
+		})
+
+		let counter = (backAutomaton.states.filter(x => (x.isInitial && x.isFinal)).length>0)?1:2
+
+		while(backAutomaton.states.length > counter){
+			let data = backAutomaton.toData()
+			console.log("data")
+			console.log(data)
+			let stateToDelete = data.nodes.filter(x => !(x.isInitial || x.isFinal))[0]
+			console.log("stateToDelete")
+			console.log(stateToDelete)
+			if (stateToDelete){
+				let fromEdges = data.edges.filter(x => (x.from == stateToDelete.label && x.to != x.from))
+				console.log("fromEdges")
+				console.log(fromEdges)
+				let toEdges = data.edges.filter(x => (x.to == stateToDelete.label && x.to != x.from))
+				console.log("toEdges")
+				console.log(toEdges)
+				let cerraduraEdge = data.edges.find(x => (x.to == stateToDelete.label && x.to == x.from))
+				if (cerraduraEdge)
+					toEdges.forEach(edge => edge.label += '('+cerraduraEdge.label+')*')
+
+				let currentAutomaton = new DFAre(backAutomaton.name,Array.from(backAutomaton.alphabet))
+
+				data.nodes.filter(x => x.label != stateToDelete.label).forEach(state => {
+					currentAutomaton.addState(state.label,state.isInitial,state.isFinal)
+				})
+				
+				data.edges.filter(x => (x.from != stateToDelete.label && x.to != stateToDelete.label)).forEach(trans => {
+					currentAutomaton.addTransition(trans.label, trans.from, trans.to)
+				})
+
+				toEdges.forEach(x => {
+					fromEdges.forEach(y => {
+						let newLabel = x.label+y.label
+						currentAutomaton.addTransition(newLabel,x.from,y.to)
+					})
+				})
+
+				stepByStep.push(currentAutomaton)
+				backAutomaton = currentAutomaton
+			}
+		}
+		console.log("stepByStep")
+		console.log(stepByStep)
+		return backAutomaton
+	}
+}
+
+function normalizeLabel (trans) {
+	let satandBy = trans.label.replaceAll('.','\\.').replaceAll('+','\\+').replaceAll('*','\\*')
+	let setOfChars = satandBy.split(/,|\//)
+	if (setOfChars.length>1) {setOfChars = '('+setOfChars.join('+')+')'}
+	else setOfChars = setOfChars[0]
+	return setOfChars
 }

@@ -19,6 +19,15 @@ automDFA.addTransition('1','00','q0')
 automDFA.addTransition('0','00','000')
 automDFA.addTransition('0/1','000','000')
 
+const automDFA2 = new DFA("dfa",['0','1'])
+automDFA2.addState('q0', true,true)
+automDFA2.addState('q1')
+
+automDFA2.addTransition('1','q0','q0')
+automDFA2.addTransition('0','q0','q1')
+automDFA2.addTransition('0','q1','q1')
+automDFA2.addTransition('1','q1','q0')
+
 const automNFA = new NFA("nfa", ['0','1'])
 const automNFA_str1 = "01001010110"
 
@@ -92,7 +101,7 @@ automNFAe_dfa2.addTransition('epsilon','q3','q4')
 automNFAe_dfa2.addTransition('0','q4','q4')
 
 exports.getDFA = function getDFA(){
-	return [automDFA]
+	return [automDFA,automDFA2]
 }
 
 exports.getNFA = function getNFA(){
