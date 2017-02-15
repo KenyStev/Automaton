@@ -72,8 +72,9 @@ function generateItems(data,mode){
 
 function loadAutomaton(id,mode){
 	let example = undefined
-	if (mode=="DFA")
-		example = dfa_automatons[id].toRE()
+	if (mode=="DFA"){
+		example = dfa_automatons[id]
+	}
 	else if (mode=="NFA")
 		example = nfa_automatons[id]
 	else if (mode=="NFAe")

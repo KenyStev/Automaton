@@ -37,8 +37,32 @@ export default class DFAre extends Automaton{
 		let existTransFromTo = from.transitions.find(x => x.to == toName)
 
 		if (existTransFromTo)
-			existTransFromTo.label += transitionName
+			existTransFromTo.label += '+'+transitionName
 		else
 			from.addTransition(new Transition(transitionName,fromName,toName))
+	}
+
+	getRegex(){
+		let oneState = (this.states.filter(x => x.isInitial && x.isFinal).length > 0)?true:false
+
+		if (oneState) {
+			return this.toData().edges[0].label
+		}else{
+			let initialState = this.states.find(x => x.isInitial)
+			let finalState = this.states.find(x => x.isFinal)
+
+			let R = initialState.transitions.find(x => x.to == initialState.label)
+			let S = initialState.transitions.find(x => x.to == finalState.label)
+			let T = finalState.transitions.find(x => x.to == finalState.label)
+			let U = finalState.transitions.find(x => x.to == initialState.label)
+
+			R = R?'('+R.label+')*':''
+			S = S?S.label:''
+
+			T = T?'('+T.label+')*':''
+			U = U?U.label:''
+
+			return R + S + T + U
+		}
 	}
 }

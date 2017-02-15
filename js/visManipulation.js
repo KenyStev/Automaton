@@ -201,6 +201,43 @@ function showMessageError(err){
   return ""
 }
 
+function convertDFAToRE(event){
+  convertToRE(event,"DFA")
+}
+
+function convertToRE(event,mode) {
+  let alphabet = document.getElementById('automaton-alphabet').value
+  alphabet = alphabet.split(',')
+
+  try {
+    if (mode == "DFA"){
+      automaton = AutomatonJS.NewDFA(network.body.data,"nuevo",alphabet)
+    }else if (mode == "NFA"){
+      automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet).toDFA()
+    }else if (mode == "NFAe"){
+      automaton = AutomatonJS.NewNFAe(network.body.data,"nuevo",alphabet).toDFA()
+    }
+
+    currentAutomaton = automaton
+    let regex = currentAutomaton.toRE()
+
+    document.getElementById('show-message').innerHTML = `
+      <div class="alert ${regex?'alert-success alert-dismissable':'alert-danger'}">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>${regex?"Valid":"Invalid"}!</strong> regex: ${regex}
+      </div>
+    `
+  }
+  catch(err) {
+      document.getElementById("show-message").innerHTML = `
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Invalid!</strong> 
+        ${showMessageError(err)}
+      </div>`;
+  }
+}
+
 function convertNFAToDFA(event){
   convertToDFA(event,"NFA")
 }
@@ -246,4 +283,8 @@ $('#convert-nfa-dfa').on('click', e => {
 
 $('#convert-nfae-dfa').on('click', e => {
   convertNFAeToDFA(e)
+})
+
+$('#convert-dfa-re').on('click', e => {
+  convertDFAToRE(e)
 })
