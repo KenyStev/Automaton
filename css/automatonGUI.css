@@ -60,3 +60,8 @@ div.table_description {
   padding:10px;
   text-align: center;
 }
+
+.vis-manipulation{
+  position: relative;
+  top: -25px;
+}

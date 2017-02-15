@@ -8,12 +8,12 @@
   <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="./bootflat/css/bootflat.min.css">
   <link rel="stylesheet" type="text/css" href="./css/automatonGUI.css">
+  <link href="./js/vis/vis-network.min.css" rel="stylesheet" type="text/css" />
 
   <script type="text/javascript" src="./js/jQuery_v3_1_1.js"></script>
   <script type="text/javascript" src="./dist/bundle.js" charset="utf-8"></script>
   <script type="text/javascript" src="./js/vis/vis.js"></script>
   
-  <link href="./js/vis/vis-network.min.css" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -44,7 +44,7 @@
               <div class="panel-body">
                 <button id="save-dfa" type="button" class="btn btn-success btn-block">Save</button>
                 <button id="send-automaton-dfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
-                <button id="load-example-dfa" type="button" class="btn btn-info btn-block">Example</button>
+                <button id="convert-dfa-re" type="button" class="btn btn-warning btn-block">Convert to Regex</button>
                 <div id="dfa-automatons" class="row list-group"></div>
               </div>
             </div>
@@ -61,7 +61,6 @@
               <div class="panel-body">
                 <button id="save-nfa" type="button" class="btn btn-success btn-block">Save</button>
                 <button id="send-automaton-nfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
-                <button id="load-example-nfa" type="button" class="btn btn-info btn-block">Example</button>
                 <button id="convert-nfa-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
                 <div id="nfa-automatons" class="row list-group"></div>
               </div>
@@ -79,7 +78,6 @@
               <div class="panel-body">
                 <button id="save-nfae" type="button" class="btn btn-success btn-block">Save</button>
                 <button id="send-automaton-nfae" type="button" class="btn btn-primary btn-block">Evaluate</button>
-                <button id="load-example-nfae" type="button" class="btn btn-info btn-block">Example</button>
                 <button id="convert-nfae-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
                 <div id="nfae-automatons" class="row list-group"></div>
               </div>

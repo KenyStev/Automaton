@@ -1,6 +1,14 @@
-var dfa_automatons = []
-var nfa_automatons = []
-var nfae_automatons = []
+var dfa_automatons = undefined// sessionStorage.getItem('dfa')
+var nfa_automatons = undefined//sessionStorage.getItem('nfa')
+var nfae_automatons = undefined//sessionStorage.getItem('nfae')
+
+dfa_automatons = dfa_automatons?(JSON.parse(dfa_automatons)).array:AutomatonJS.examples.getDFA()
+nfa_automatons = nfa_automatons?(JSON.parse(nfa_automatons)).array:AutomatonJS.examples.getNFA()
+nfae_automatons = nfae_automatons?(JSON.parse(nfae_automatons)).array:AutomatonJS.examples.getNFAe()
+
+updateList("DFA")
+updateList("NFA")
+updateList("NFAe")
 
 function saveAutomaton (mode) {
 	let alphabet = document.getElementById('automaton-alphabet').value
@@ -11,12 +19,15 @@ function saveAutomaton (mode) {
 		if (mode == "DFA"){
 	      automaton = AutomatonJS.NewDFA(network.body.data,"nuevo",alphabet)
 	      dfa_automatons.push(automaton)
+	      sessionStorage.setItem('dfa',JSON.stringify({array: dfa_automatons}))
 	    }else if (mode == "NFA"){
 	      automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet)
 	      nfa_automatons.push(automaton)
+	      sessionStorage.setItem('nfa',JSON.stringify({array: nfa_automatons}))
 	    }else if (mode == "NFAe"){
 	      automaton = AutomatonJS.NewNFAe(network.body.data,"nuevo",alphabet)
 	      nfae_automatons.push(automaton)
+	      sessionStorage.setItem('nfae',JSON.stringify({array: nfae_automatons}))
 	    }
 
 	    updateList(mode)
@@ -60,13 +71,18 @@ function generateItems(data,mode){
 }
 
 function loadAutomaton(id,mode){
-	if (mode=="DFA")
-		dataSet = dfa_automatons[id].toDataSet()
+	let example = undefined
+	if (mode=="DFA"){
+		example = dfa_automatons[id]
+	}
 	else if (mode=="NFA")
-		dataSet = nfa_automatons[id].toDataSet()
+		example = nfa_automatons[id]
 	else if (mode=="NFAe")
-		dataSet = nfae_automatons[id].toDataSet()
+		example = nfae_automatons[id]
+	dataSet = example.toDataSet()
 	draw()
+	document.getElementById('automaton-alphabet').value = Array.from(example.alphabet).join(",")
+	currentAutomaton = example
 }
 
 $('#save-dfa').on('click',e => {

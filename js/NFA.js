@@ -7,11 +7,6 @@ import { UnknownCharError,
 		NextTransitionError 
 } from "./errors"
 
-String.prototype.replaceAll = function(search, replacement) {
-    var target = this
-    return target.split(search).join(replacement)
-}
-
 export default class NFA extends Automaton{
 	constructor(name, alphabet){super(name, alphabet)}
 
