@@ -149,6 +149,8 @@ export default class DFA extends Automaton{
 					fromEdges.forEach(y => {
 						let newLabel = x.label+y.label
 						currentAutomaton.addTransition(newLabel,x.from,y.to)
+						console.log("newLabel")
+						console.log(newLabel)
 					})
 				})
 
