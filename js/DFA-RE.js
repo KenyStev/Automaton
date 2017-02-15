@@ -26,7 +26,7 @@ export default class DFAre extends Automaton{
 		if (!to)
 			throw new UnknownStateError(toName)
 		if (from == to)
-			transitionName = '('+transitionName+')*'
+			transitionName = transitionName
 		// transitionName.split(/,|\//).forEach(c => {
 		// 	if (!this.alphabet.has(c))
 		// 		throw new UnknownCharError(c)
@@ -36,8 +36,11 @@ export default class DFAre extends Automaton{
 
 		let existTransFromTo = from.transitions.find(x => x.to == toName)
 
-		if (existTransFromTo)
-			existTransFromTo.label += '+'+transitionName
+		if (existTransFromTo){
+			existTransFromTo.label = '('+existTransFromTo.label+'+'+transitionName+')'
+			console.log("existTransFromTo")
+			console.log(existTransFromTo.label)
+		}
 		else
 			from.addTransition(new Transition(transitionName,fromName,toName))
 	}
