@@ -119,18 +119,10 @@ export default class DFA extends Automaton{
 
 		while(backAutomaton.states.length > counter){
 			let data = backAutomaton.toData()
-			// console.log("data")
-			// console.log(data)
 			let stateToDelete = data.nodes.find(x => !(x.isInitial || x.isFinal))
-			// console.log("stateToDelete")
-			// console.log(stateToDelete)
 			if (stateToDelete){
 				let fromEdges = data.edges.filter(x => (x.from == stateToDelete.label && x.to != x.from))
-				// console.log("fromEdges")
-				// console.log(fromEdges)
 				let toEdges = data.edges.filter(x => (x.to == stateToDelete.label && x.to != x.from))
-				// console.log("toEdges")
-				// console.log(toEdges)
 				let cerraduraEdge = data.edges.find(x => (x.to == stateToDelete.label && x.to == x.from))
 				if (cerraduraEdge)
 					toEdges.forEach(edge => edge.label += '('+cerraduraEdge.label+')*')
@@ -149,8 +141,6 @@ export default class DFA extends Automaton{
 					fromEdges.forEach(y => {
 						let newLabel = x.label+y.label
 						currentAutomaton.addTransition(newLabel,x.from,y.to)
-						console.log("newLabel")
-						console.log(newLabel)
 					})
 				})
 
@@ -158,8 +148,6 @@ export default class DFA extends Automaton{
 				backAutomaton = currentAutomaton
 			}
 		}
-		console.log("stepByStep")
-		console.log(stepByStep)
 		return stepByStep
 	}
 }

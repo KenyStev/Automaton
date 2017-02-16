@@ -8,14 +8,15 @@ body, select {
   border: 1px solid lightgray;
 }
 
-#stepByStep{
+#sbs-accordion{
   background-color: white;
 }
 
 .stepByStep{
+  display: inline-block;
   position:relative;
-  width: auto;
-  height: 200px;
+  min-width: 326px;
+  height: 400px;
   border: 1px solid lightgray;
 }
 

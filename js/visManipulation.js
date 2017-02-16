@@ -267,37 +267,49 @@ function showStepByStep() {
   document.getElementById("content-panel-sbs").innerHTML = `
     <div class="alert">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <div id="stepByStep"</div>
+      <div class="panel-group panel-group-lists collapse in" id="sbs-accordion" style=""></div>
     </div>
   `;
-  let placeToShow =  document.getElementById("stepByStep")
+  let placeToShow =  document.getElementById("sbs-accordion")
   let sbs = currentAutomaton.toREstepByStep()
   let index = 0
 
   for(let s of sbs){
     let stepIndex = 0
     let node = document.createElement("div")
-    let textnode = document.createTextNode("automaton "+index);
-    node.appendChild(textnode)
+    node.className = "panel"
+    node.innerHTML = `
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#sbs-accordion" href="#sbs-${index}">
+            automaton +${index}
+          </a>
+        </h4>
+      </div>
+      <div id="sbs-${index}" class="panel-collapse collapse">
+        <div id="sbs-${index}-body" class="panel-body row">
+          
+        </div>
+      </div>
+    `;
+    placeToShow.appendChild(node)
+    let panelBody = document.getElementById("sbs-"+index+"-body")
     for(let step of s){
       let nodeStep = document.createElement("div")
-      nodeStep.className = "stepByStep"
+      nodeStep.className = "stepByStep col-md-6 col-xs-12"
       let textnodeStep = document.createTextNode("automaton "+index + "_" + stepIndex)
       nodeStep.appendChild(textnodeStep)
       let newNetwork = new vis.Network(nodeStep, step.toDataSet(), {});
-      node.appendChild(nodeStep)
+      panelBody.appendChild(nodeStep)
       stepIndex++
     }
-    placeToShow.appendChild(node)
     index++
   }
   document.getElementById("show-stepByStep").style.display = 'none'
 }
 
 function init() {
-	// console.log(AutomatonJS);
-  // setDefaultLocale();
-  draw();
+  draw()
 }
 
 $('#send-automaton-dfa').on('click', e => {
