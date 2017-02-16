@@ -228,7 +228,7 @@ function convertToRE(event,mode) {
         <button id="show-stepByStep" type="button" class="btn btn-warning btn-block">Step By Step</button>
       </div>
     `
-     document.getElementById("show-stepByStep").addEventListener("click", showStepByStep)
+     document.getElementById("show-stepByStep").addEventListener("click", teLaCreisteWey)
   }
   catch(err) {
       document.getElementById("show-message").innerHTML = `
@@ -260,7 +260,12 @@ function convertToDFA(event,mode){
 
   currentAutomaton = automaton.toDFA()
   dataSet = currentAutomaton.toDataSet()
-  draw()
+  network.setData(dataSet)
+}
+
+function teLaCreisteWey(){
+  alert("Te la creiste wey! ha-ha")
+  document.getElementById("show-stepByStep").style.display = 'none'
 }
 
 function showStepByStep() {
@@ -282,7 +287,7 @@ function showStepByStep() {
       <div class="panel-heading">
         <h4 class="panel-title">
           <a data-toggle="collapse" data-parent="#sbs-accordion" href="#sbs-${index}">
-            automaton +${index}
+            automaton ${index}
           </a>
         </h4>
       </div>
@@ -297,10 +302,15 @@ function showStepByStep() {
     for(let step of s){
       let nodeStep = document.createElement("div")
       nodeStep.className = "stepByStep col-md-6 col-xs-12"
-      let textnodeStep = document.createTextNode("automaton "+index + "_" + stepIndex)
-      nodeStep.appendChild(textnodeStep)
-      let newNetwork = new vis.Network(nodeStep, step.toDataSet(), {});
+      nodeStep.id = "stepByStep-" + stepIndex
       panelBody.appendChild(nodeStep)
+      // nodeStep = document.getElementById("stepByStep-" + stepIndex)
+      let newNetwork = new vis.Network(nodeStep, step.toDataSet(), {
+        autoResize: true,
+        height: '100%',
+        width: '100%',
+        layout:{randomSeed:5}
+      });
       stepIndex++
     }
     index++
@@ -332,4 +342,8 @@ $('#convert-nfae-dfa').on('click', e => {
 
 $('#convert-dfa-re').on('click', e => {
   convertDFAToRE(e)
+})
+
+$('#clear-canvas').on('click', e => {
+  network.setData({})
 })
