@@ -60,14 +60,14 @@ function draw() {
         }
         document.getElementById('edge-operation').innerHTML = "Add Edge";
         // document.getElementById('edge-arrows-row').style.display = 'none';
-        document.getElementById('edge-arrows').value = 'to';
+        // document.getElementById('edge-arrows').value = 'to';
         editEdgeWithoutDrag(data, callback);
       },
       editEdge: {
         editWithoutDrag: function(data, callback) {
           document.getElementById('edge-operation').innerHTML = "Edit Edge";
           // document.getElementById('edge-arrows-row').style.display = '';
-          document.getElementById('edge-arrows').value = 'to';
+          // document.getElementById('edge-arrows').value = 'to';
           // console.log(data);
           editEdgeWithoutDrag(data,callback);
         }
@@ -135,7 +135,7 @@ function saveEdgeData(data, callback) {
   if (typeof data.from === 'object')
     data.from = data.from.id
   data.label = document.getElementById('edge-label').value;
-  data.arrows = document.getElementById('edge-arrows').value;
+  data.arrows = 'to'//document.getElementById('edge-arrows').value;
   clearEdgePopUp();
   callback(data);
 }
@@ -160,19 +160,20 @@ function evaluate(event,mode){
 	let alphabet = document.getElementById('automaton-alphabet').value
 	alphabet = alphabet.split(',')
 	let word = document.getElementById('automaton-word').value
+  let name = document.getElementById('automaton-name').value
 	let automaton = undefined
 	let finalState = undefined
 
 	try {
 		if (mode == "DFA"){
-      automaton = AutomatonJS.NewDFA(network.body.data,"nuevo",alphabet)
+      automaton = AutomatonJS.NewDFA(network.body.data,name,alphabet)
   		finalState = automaton.match(word)
       automaton.toRE()
     }else if (mode == "NFA"){
-      automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet)
+      automaton = AutomatonJS.NewNFA(network.body.data,name,alphabet)
       finalState = automaton.match(word,automaton.getInitialState())
     }else if (mode == "NFAe"){
-      automaton = AutomatonJS.NewNFAe(network.body.data,"nuevo",alphabet)
+      automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
       finalState = automaton.match(word,[automaton.getInitialState()])
     }
 
@@ -208,14 +209,15 @@ function convertDFAToRE(event){
 function convertToRE(event,mode) {
   let alphabet = document.getElementById('automaton-alphabet').value
   alphabet = alphabet.split(',')
+  let name = document.getElementById('automaton-name').value
 
   try {
     if (mode == "DFA"){
-      automaton = AutomatonJS.NewDFA(network.body.data,"nuevo",alphabet)
+      automaton = AutomatonJS.NewDFA(network.body.data,name,alphabet)
     }else if (mode == "NFA"){
-      automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet).toDFA()
+      automaton = AutomatonJS.NewNFA(network.body.data,name,alphabet).toDFA()
     }else if (mode == "NFAe"){
-      automaton = AutomatonJS.NewNFAe(network.body.data,"nuevo",alphabet).toDFA()
+      automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet).toDFA()
     }
 
     currentAutomaton = automaton
@@ -250,13 +252,14 @@ function convertNFAeToDFA(event){
 
 function convertToDFA(event,mode){
   let alphabet = document.getElementById('automaton-alphabet').value
+  let name = document.getElementById('automaton-name').value
   alphabet = alphabet.split(',')
 
   let automaton = undefined
   if (mode=="NFA")
-    automaton = AutomatonJS.NewNFA(network.body.data,"nuevo",alphabet)
+    automaton = AutomatonJS.NewNFA(network.body.data,name,alphabet)
   else if (mode=="NFAe")
-    automaton = AutomatonJS.NewNFAe(network.body.data,"nuevo",alphabet)
+    automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
 
   currentAutomaton = automaton.toDFA()
   dataSet = currentAutomaton.toDataSet()

@@ -28,6 +28,7 @@
       <div id="show-message"></div>
 
       <div id="automaton">
+        <input id="automaton-name" class="form-control" value="" placeholder="name or description"/>
         <input id="automaton-alphabet" class="form-control" value="" placeholder="alphabet"/>
         <input id="automaton-word" class="form-control" value="" placeholder="word to try"/>
 
@@ -92,41 +93,59 @@
       <div id="mynetwork"></div>
     </div>
   </div>
+  <hr/>
   <div id="content-panel-sbs" class="row">
+  <br/>
     
+  <div id="node-popUp" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="node-operation" class="modal-title">Node</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-6">
+              <label>type</label>
+              <input id="node-id" class="form-control" placeholder="start/end" type="text">
+            </div>
+            <div class="col-xs-6">
+              <label>State Name</label>
+              <input id="node-label" class="form-control" placeholder="name" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" value="save" id="node-saveButton">Send</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" value="cancel" id="node-cancelButton">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="edge-popUp" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="edge-operation" class="modal-title">Edge</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12">
+              <label>Label</label>
+              <input id="edge-label" class="form-control" placeholder="label" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" value="save" id="edge-saveButton">Send</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" value="cancel" id="edge-cancelButton">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 </div>
-
-<div id="node-popUp">
-  <span id="node-operation">node</span> <br>
-  <table style="margin:auto;">
-    <tr>
-      <td>id</td><td><input id="node-id" value="new value" /></td>
-    </tr>
-    <tr>
-      <td>label</td><td><input id="node-label" value="new value" /></td>
-    </tr>
-  </table>
-  <input type="button" value="save" id="node-saveButton" />
-  <input type="button" value="cancel" id="node-cancelButton" />
-</div>
-
-<div id="edge-popUp">
-  <span id="edge-operation">edge</span> <br>
-  <table style="margin:auto;">
-    <tr>
-      <td>label</td><td><input id="edge-label" value="new value" /></td>
-    </tr>
-    <tr style="display: none;">
-      <td>arrows</td><td><input id="edge-arrows" value="to" /></td>
-    </tr>
-  </table>
-  <input type="button" value="save" id="edge-saveButton" />
-  <input type="button" value="cancel" id="edge-cancelButton" />
-</div>
-
-<br />
-
 
 <script type="text/javascript" src="./js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./js/visManipulation.js"></script>

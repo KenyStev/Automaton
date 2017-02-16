@@ -3,7 +3,7 @@ import NFA from "./NFA"
 import NFAe from "./NFA-e"
 
 export function NewDFA(data, name, alphabet) {
-	const DFAutomaton = new DFA("name", alphabet)
+	const DFAutomaton = new DFA(name, alphabet)
 	let states = objectToArray(data.nodes._data)
 	states.forEach(state => {
 		DFAutomaton.addState(state.label,
@@ -21,7 +21,7 @@ export function NewDFA(data, name, alphabet) {
 }
 
 export function NewNFA(data, name, alphabet) {
-	const NFAutomaton = new NFA("name", alphabet)
+	const NFAutomaton = new NFA(name, alphabet)
 	let states = objectToArray(data.nodes._data)
 	states.forEach(state => {
 		NFAutomaton.addState(state.label,
@@ -39,7 +39,7 @@ export function NewNFA(data, name, alphabet) {
 }
 
 export function NewNFAe(data, name, alphabet) {
-	const NFAeutomaton = new NFAe("name", alphabet)
+	const NFAeutomaton = new NFAe(name, alphabet)
 	let states = objectToArray(data.nodes._data)
 	states.forEach(state => {
 		NFAeutomaton.addState(state.label,
