@@ -225,8 +225,10 @@ function convertToRE(event,mode) {
       <div class="alert ${regex?'alert-success alert-dismissable':'alert-danger'}">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <strong>${regex?"Valid":"Invalid"}!</strong> regex: ${regex}
+        <button id="show-stepByStep" type="button" class="btn btn-warning btn-block">Step By Step</button>
       </div>
     `
+     document.getElementById("show-stepByStep").addEventListener("click", teLaCreisteWey)
   }
   catch(err) {
       document.getElementById("show-message").innerHTML = `
@@ -258,13 +260,66 @@ function convertToDFA(event,mode){
 
   currentAutomaton = automaton.toDFA()
   dataSet = currentAutomaton.toDataSet()
-  draw()
+  network.setData(dataSet)
+}
+
+function teLaCreisteWey(){
+  alert("Te la creiste wey! ha-ha")
+  document.getElementById("show-stepByStep").style.display = 'none'
+}
+
+function showStepByStep() {
+  document.getElementById("content-panel-sbs").innerHTML = `
+    <div class="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <div class="panel-group panel-group-lists collapse in" id="sbs-accordion" style=""></div>
+    </div>
+  `;
+  let placeToShow =  document.getElementById("sbs-accordion")
+  let sbs = currentAutomaton.toREstepByStep()
+  let index = 0
+
+  for(let s of sbs){
+    let stepIndex = 0
+    let node = document.createElement("div")
+    node.className = "panel"
+    node.innerHTML = `
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#sbs-accordion" href="#sbs-${index}">
+            automaton ${index}
+          </a>
+        </h4>
+      </div>
+      <div id="sbs-${index}" class="panel-collapse collapse">
+        <div id="sbs-${index}-body" class="panel-body row">
+          
+        </div>
+      </div>
+    `;
+    placeToShow.appendChild(node)
+    let panelBody = document.getElementById("sbs-"+index+"-body")
+    for(let step of s){
+      let nodeStep = document.createElement("div")
+      nodeStep.className = "stepByStep col-md-6 col-xs-12"
+      nodeStep.id = "stepByStep-" + stepIndex
+      panelBody.appendChild(nodeStep)
+      // nodeStep = document.getElementById("stepByStep-" + stepIndex)
+      let newNetwork = new vis.Network(nodeStep, step.toDataSet(), {
+        autoResize: true,
+        height: '100%',
+        width: '100%',
+        layout:{randomSeed:5}
+      });
+      stepIndex++
+    }
+    index++
+  }
+  document.getElementById("show-stepByStep").style.display = 'none'
 }
 
 function init() {
-	// console.log(AutomatonJS);
-  // setDefaultLocale();
-  draw();
+  draw()
 }
 
 $('#send-automaton-dfa').on('click', e => {
@@ -287,4 +342,8 @@ $('#convert-nfae-dfa').on('click', e => {
 
 $('#convert-dfa-re').on('click', e => {
   convertDFAToRE(e)
+})
+
+$('#clear-canvas').on('click', e => {
+  network.setData({})
 })

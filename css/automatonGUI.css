@@ -7,6 +7,19 @@ body, select {
   height: 400px;
   border: 1px solid lightgray;
 }
+
+#sbs-accordion{
+  background-color: white;
+}
+
+.stepByStep{
+  display: inline-block;
+  position:relative;
+  min-width: 326px;
+  height: 400px;
+  border: 1px solid lightgray;
+}
+
 table.legend_table {
   font-size: 11px;
   border-width:1px;

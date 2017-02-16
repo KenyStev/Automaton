@@ -80,7 +80,7 @@ function loadAutomaton(id,mode){
 	else if (mode=="NFAe")
 		example = nfae_automatons[id]
 	dataSet = example.toDataSet()
-	draw()
+	network.setData(dataSet)
 	document.getElementById('automaton-alphabet').value = Array.from(example.alphabet).join(",")
 	currentAutomaton = example
 }
