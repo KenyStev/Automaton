@@ -7,6 +7,18 @@ body, select {
   height: 400px;
   border: 1px solid lightgray;
 }
+
+#stepByStep{
+  background-color: white;
+}
+
+.stepByStep{
+  position:relative;
+  width: auto;
+  height: 200px;
+  border: 1px solid lightgray;
+}
+
 table.legend_table {
   font-size: 11px;
   border-width:1px;

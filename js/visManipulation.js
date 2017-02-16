@@ -225,8 +225,10 @@ function convertToRE(event,mode) {
       <div class="alert ${regex?'alert-success alert-dismissable':'alert-danger'}">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <strong>${regex?"Valid":"Invalid"}!</strong> regex: ${regex}
+        <button id="show-stepByStep" type="button" class="btn btn-warning btn-block">Step By Step</button>
       </div>
     `
+     document.getElementById("show-stepByStep").addEventListener("click", showStepByStep)
   }
   catch(err) {
       document.getElementById("show-message").innerHTML = `
@@ -259,6 +261,37 @@ function convertToDFA(event,mode){
   currentAutomaton = automaton.toDFA()
   dataSet = currentAutomaton.toDataSet()
   draw()
+}
+
+function showStepByStep() {
+  document.getElementById("content-panel-sbs").innerHTML = `
+    <div class="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <div id="stepByStep"</div>
+    </div>
+  `;
+  let placeToShow =  document.getElementById("stepByStep")
+  let sbs = currentAutomaton.toREstepByStep()
+  let index = 0
+
+  for(let s of sbs){
+    let stepIndex = 0
+    let node = document.createElement("div")
+    let textnode = document.createTextNode("automaton "+index);
+    node.appendChild(textnode)
+    for(let step of s){
+      let nodeStep = document.createElement("div")
+      nodeStep.className = "stepByStep"
+      let textnodeStep = document.createTextNode("automaton "+index + "_" + stepIndex)
+      nodeStep.appendChild(textnodeStep)
+      let newNetwork = new vis.Network(nodeStep, step.toDataSet(), {});
+      node.appendChild(nodeStep)
+      stepIndex++
+    }
+    placeToShow.appendChild(node)
+    index++
+  }
+  document.getElementById("show-stepByStep").style.display = 'none'
 }
 
 function init() {
