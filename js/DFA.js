@@ -77,7 +77,7 @@ export default class DFA extends Automaton{
 
 		for(let as of automatons){
 			let a = as[as.length-1]
-			regex.push('['+a.getRegex()+']')
+			regex.push('('+a.getRegex()+')')
 		}
 		console.log("regex")
 		console.log(regex.join('+'))
@@ -125,7 +125,7 @@ export default class DFA extends Automaton{
 				let toEdges = data.edges.filter(x => (x.to == stateToDelete.label && x.to != x.from))
 				let cerraduraEdge = data.edges.find(x => (x.to == stateToDelete.label && x.to == x.from))
 				if (cerraduraEdge)
-					toEdges.forEach(edge => edge.label += '('+cerraduraEdge.label+')*')
+					toEdges.forEach(edge => edge.label += '.('+cerraduraEdge.label+')*')
 
 				let currentAutomaton = new DFAre(backAutomaton.name,Array.from(backAutomaton.alphabet))
 
@@ -139,7 +139,7 @@ export default class DFA extends Automaton{
 
 				toEdges.forEach(x => {
 					fromEdges.forEach(y => {
-						let newLabel = x.label+y.label
+						let newLabel = x.label+'.'+y.label
 						currentAutomaton.addTransition(newLabel,x.from,y.to)
 					})
 				})

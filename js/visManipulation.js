@@ -230,7 +230,7 @@ function convertToRE(event,mode) {
         <button id="show-stepByStep" type="button" class="btn btn-warning btn-block">Step By Step</button>
       </div>
     `
-     document.getElementById("show-stepByStep").addEventListener("click", teLaCreisteWey)
+     document.getElementById("show-stepByStep").addEventListener("click", showStepByStep)
   }
   catch(err) {
       document.getElementById("show-message").innerHTML = `
@@ -309,6 +309,11 @@ function showStepByStep() {
       panelBody.appendChild(nodeStep)
       // nodeStep = document.getElementById("stepByStep-" + stepIndex)
       let newNetwork = new vis.Network(nodeStep, step.toDataSet(), {
+        edges:{
+          arrows: {
+            to:     {enabled: true, scaleFactor:1, type:'arrow'}
+          }
+        },
         autoResize: true,
         height: '100%',
         width: '100%',

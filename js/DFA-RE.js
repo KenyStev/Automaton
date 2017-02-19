@@ -65,7 +65,7 @@ export default class DFAre extends Automaton{
 			T = T?'('+T.label+')*':''
 			U = U?U.label:''
 
-			return R + S + T + U
+			return R + (R && S?'.':'') + S + (S && T || S && U?'.':'') + T + (T && U?'.':'') + U
 		}
 	}
 }
