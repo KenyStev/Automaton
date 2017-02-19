@@ -4,7 +4,9 @@ var nfae_automatons = undefined//sessionStorage.getItem('nfae')
 
 dfa_automatons = dfa_automatons?(JSON.parse(dfa_automatons)).array:AutomatonJS.examples.getDFA()
 nfa_automatons = nfa_automatons?(JSON.parse(nfa_automatons)).array:AutomatonJS.examples.getNFA()
-nfae_automatons = nfae_automatons?(JSON.parse(nfae_automatons)).array:AutomatonJS.examples.getNFAe()
+// nfae_automatons = nfae_automatons?(JSON.parse(nfae_automatons)).array:AutomatonJS.examples.getNFAe()
+
+nfae_automatons = AutomatonJS.regexToNFAe_STEPS("(1+0.(0)*.1)*")
 
 updateList("DFA")
 updateList("NFA")

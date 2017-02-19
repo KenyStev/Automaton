@@ -4,11 +4,18 @@ import NFAe from "./NFA-e"
 import Parser from "./regular-expression-parser/regular-expression"
 
 var seed = 0
+var steps = 0
 const epsilon = "epsilon"
 
 function newQ(){
 	let tmp = seed
 	seed++
+	return tmp
+}
+
+function nextStep(){
+	let tmp = steps
+	steps++
 	return tmp
 }
 
@@ -70,7 +77,6 @@ export function regexToNFAe(regex){
 	seed = 0
 	let grammarTree = Parser.parse(regex)
 	let stepByStep = getStepByStepRegexToNFAE(grammarTree)
-	console.log(stepByStep)
 	return stepByStep[stepByStep.length-1]
 }
 
@@ -78,8 +84,11 @@ export function regexToNFAe_STEPS(regex){
 	seed = 0
 	let grammarTree = Parser.parse(regex)
 	let stepByStep = getStepByStepRegexToNFAE(grammarTree)
-	console.log(stepByStep)
-	return stepByStep
+	return stepByStep.sort((a,b) => {
+		if (a.name < b.name) return -1
+		if (a.name > b.name) return 1
+		return 0
+	})
 }
 
 function getStepByStepRegexToNFAE(node){
@@ -111,17 +120,17 @@ function getStepByStepRegexToNFAE(node){
 			}else if (node.name == "concat") {
 				currentNFAE = getNFAEconcat(leftStep,rightStep)
 			}
+			stepByStep = stepByStep.concat(leftSteps,rightSteps)
 			if (currentNFAE != null) {
 				stepByStep.push(currentNFAE)
 			}
-			stepByStep = stepByStep.concat(leftSteps,rightSteps,stepByStep)
 		}
 	}
 	return stepByStep
 }
 
 function getNFAEcharacter(character){
-	let nfae = new NFAe('valid char: '+character, [character])
+	let nfae = new NFAe('step: '+nextStep()+' char', [character])
 	let newInitialStateLabel = 'q'+newQ()
 	let newFinalStateLabel = 'q'+newQ()
 
@@ -135,7 +144,7 @@ function getNFAEcharacter(character){
 function getNFAEpipe(nfae0,nfae1){
 	let alphabet = Array.from(new Set(Array.from(nfae0.alphabet)
 		.concat(Array.from(nfae0.alphabet),Array.from(nfae1.alphabet))))
-	let nfae = new NFAe('pipe: '+nfae0.name +':'+nfae1.name, alphabet)
+	let nfae = new NFAe('step: '+nextStep()+' pipe', alphabet)
 	
 	let newInitialStateLabel = 'q'+newQ()
 	let newFinalStateLabel = 'q'+newQ()
@@ -167,7 +176,7 @@ function getNFAEpipe(nfae0,nfae1){
 
 function getNFAEkleene(nfaeIn){
 	let alphabet = Array.from(nfaeIn.alphabet)
-	let nfae = new NFAe('kleene: '+nfaeIn.name, alphabet)
+	let nfae = new NFAe('step: '+nextStep()+' kleene', alphabet)
 
 	let newInitialStateLabel = 'q'+newQ()
 	let newFinalStateLabel = 'q'+newQ()
@@ -194,7 +203,7 @@ function getNFAEkleene(nfaeIn){
 function getNFAEconcat(nfae0,nfae1){
 	let alphabet = Array.from(new Set(Array.from(nfae0.alphabet)
 		.concat(Array.from(nfae0.alphabet),Array.from(nfae1.alphabet))))
-	let nfae = new NFAe('concat: '+nfae0.name +':'+nfae1.name, alphabet)
+	let nfae = new NFAe('step: '+nextStep()+' concat', alphabet)
 
 	let initialState0 = nfae0.states.find(x => x.isInitial)
 	let finalState0 = nfae0.states.find(x => x.isFinal)
