@@ -67,8 +67,6 @@ function generateItems(data,mode){
 	let html = ""
 	let index = 0
 	for(let d of data){
-		console.log("d of data")
-		console.log(d)
 		html += `<a href='#' class='list-group-item' onclick='loadAutomaton(${index},"${mode}")'>
 					<h4 class='list-group-item-heading'>automaton  ${index} - ${d.name}</h4>
 				</a>`;
