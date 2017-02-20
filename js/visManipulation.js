@@ -32,7 +32,7 @@ function draw() {
   // create a network
   var container = document.getElementById('mynetwork');
   var options = {
-    layout: {randomSeed:seed}, // just to make sure the layout is the same when the locale is changed
+    layout: {randomSeed:seed,improvedLayout:false}, // just to make sure the layout is the same when the locale is changed
     edges:{
       arrows: {
         to:     {enabled: true, scaleFactor:1, type:'arrow'}
@@ -135,7 +135,7 @@ function saveEdgeData(data, callback) {
   if (typeof data.from === 'object')
     data.from = data.from.id
   data.label = document.getElementById('edge-label').value;
-  data.arrows = 'to'//document.getElementById('edge-arrows').value;
+  data.arrows = 'to'
   clearEdgePopUp();
   callback(data);
 }
@@ -144,213 +144,15 @@ function objectToArray(obj) {
   return Object.keys(obj).map(function (key) { return obj[key]; });
 }
 
-function evaluateDfa(event){
-  evaluate(event,"DFA")
-}
-
-function evaluateNfa(event){
-  evaluate(event,"NFA")
-}
-
-function evaluateNfae(event){
-  evaluate(event,"NFAe")
-}
-
-function evaluate(event,mode){
-	let alphabet = document.getElementById('automaton-alphabet').value
-	alphabet = alphabet.split(',')
-	let word = document.getElementById('automaton-word').value
-  let name = document.getElementById('automaton-name').value
-	let automaton = undefined
-	let finalState = undefined
-
-	try {
-		if (mode == "DFA"){
-      automaton = AutomatonJS.NewDFA(network.body.data,name,alphabet)
-  		finalState = automaton.match(word)
-      automaton.toRE()
-    }else if (mode == "NFA"){
-      automaton = AutomatonJS.NewNFA(network.body.data,name,alphabet)
-      finalState = automaton.match(word,automaton.getInitialState())
-    }else if (mode == "NFAe"){
-      automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
-      finalState = automaton.match(word,[automaton.getInitialState()])
-    }
-
-    currentAutomaton = automaton
-
-		document.getElementById('show-message').innerHTML = `
-      <div class="alert ${finalState.isFinal?'alert-success alert-dismissable':'alert-danger'}">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <strong>${finalState.isFinal?"Valid":"Invalid"}!</strong> Final State: ${finalState.label}.
-      </div>
-		`
-	}
-	catch(err) {
-	    document.getElementById("show-message").innerHTML = `
-      <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <strong>Invalid!</strong> 
-        ${showMessageError(err)}
-      </div>`;
-	}
-}
-
 function showMessageError(err){
   if (err.message != "finalState is undefined")
           return err.message + "."
   return ""
 }
 
-function convertDFAToRE(event){
-  convertToRE(event,"DFA")
-}
-
-function convertToRE(event,mode) {
-  let alphabet = document.getElementById('automaton-alphabet').value
-  alphabet = alphabet.split(',')
-  let name = document.getElementById('automaton-name').value
-
-  try {
-    if (mode == "DFA"){
-      automaton = AutomatonJS.NewDFA(network.body.data,name,alphabet)
-    }else if (mode == "NFA"){
-      automaton = AutomatonJS.NewNFA(network.body.data,name,alphabet).toDFA()
-    }else if (mode == "NFAe"){
-      automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet).toDFA()
-    }
-
-    currentAutomaton = automaton
-    let regex = currentAutomaton.toRE()
-
-    document.getElementById('show-message').innerHTML = `
-      <div class="alert ${regex?'alert-success alert-dismissable':'alert-danger'}">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <strong>${regex?"Valid":"Invalid"}!</strong> regex: ${regex}
-        <button id="show-stepByStep" type="button" class="btn btn-warning btn-block">Step By Step</button>
-      </div>
-    `
-     document.getElementById("show-stepByStep").addEventListener("click", showStepByStep)
-  }
-  catch(err) {
-      document.getElementById("show-message").innerHTML = `
-      <div class="alert alert-danger">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <strong>Invalid!</strong> 
-        ${showMessageError(err)}
-      </div>`;
-  }
-}
-
-function convertNFAToDFA(event){
-  convertToDFA(event,"NFA")
-}
-
-function convertNFAeToDFA(event){
-  convertToDFA(event,"NFAe")
-}
-
-function convertToDFA(event,mode){
-  let alphabet = document.getElementById('automaton-alphabet').value
-  let name = document.getElementById('automaton-name').value
-  alphabet = alphabet.split(',')
-
-  let automaton = undefined
-  if (mode=="NFA")
-    automaton = AutomatonJS.NewNFA(network.body.data,name,alphabet)
-  else if (mode=="NFAe")
-    automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
-
-  currentAutomaton = automaton.toDFA()
-  dataSet = currentAutomaton.toDataSet()
-  network.setData(dataSet)
-}
-
-function teLaCreisteWey(){
-  alert("Te la creiste wey! ha-ha")
-  document.getElementById("show-stepByStep").style.display = 'none'
-}
-
-function showStepByStep() {
-  document.getElementById("content-panel-sbs").innerHTML = `
-    <div class="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <div class="panel-group panel-group-lists collapse in" id="sbs-accordion" style=""></div>
-    </div>
-  `;
-  let placeToShow =  document.getElementById("sbs-accordion")
-  let sbs = currentAutomaton.toREstepByStep()
-  let index = 0
-
-  for(let s of sbs){
-    let stepIndex = 0
-    let node = document.createElement("div")
-    node.className = "panel"
-    node.innerHTML = `
-      <div class="panel-heading">
-        <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#sbs-accordion" href="#sbs-${index}">
-            automaton ${index}
-          </a>
-        </h4>
-      </div>
-      <div id="sbs-${index}" class="panel-collapse collapse">
-        <div id="sbs-${index}-body" class="panel-body row">
-          
-        </div>
-      </div>
-    `;
-    placeToShow.appendChild(node)
-    let panelBody = document.getElementById("sbs-"+index+"-body")
-    for(let step of s){
-      let nodeStep = document.createElement("div")
-      nodeStep.className = "stepByStep col-md-6 col-xs-12"
-      nodeStep.id = "stepByStep-" + stepIndex
-      panelBody.appendChild(nodeStep)
-      // nodeStep = document.getElementById("stepByStep-" + stepIndex)
-      let newNetwork = new vis.Network(nodeStep, step.toDataSet(), {
-        edges:{
-          arrows: {
-            to:     {enabled: true, scaleFactor:1, type:'arrow'}
-          }
-        },
-        autoResize: true,
-        height: '100%',
-        width: '100%',
-        layout:{randomSeed:5}
-      });
-      stepIndex++
-    }
-    index++
-  }
-  document.getElementById("show-stepByStep").style.display = 'none'
-}
-
 function init() {
   draw()
 }
-
-$('#send-automaton-dfa').on('click', e => {
-  evaluateDfa(e)
-})
-$('#send-automaton-nfa').on('click', e => {
-  evaluateNfa(e)
-})
-$('#send-automaton-nfae').on('click', e => {
-  evaluateNfae(e)
-})
-
-$('#convert-nfa-dfa').on('click', e => {
-  convertNFAToDFA(e)
-})
-
-$('#convert-nfae-dfa').on('click', e => {
-  convertNFAeToDFA(e)
-})
-
-$('#convert-dfa-re').on('click', e => {
-  convertDFAToRE(e)
-})
 
 $('#clear-canvas').on('click', e => {
   network.setData({})

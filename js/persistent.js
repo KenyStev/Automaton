@@ -4,20 +4,22 @@ var nfae_automatons = undefined//sessionStorage.getItem('nfae')
 
 dfa_automatons = dfa_automatons?(JSON.parse(dfa_automatons)).array:AutomatonJS.examples.getDFA()
 nfa_automatons = nfa_automatons?(JSON.parse(nfa_automatons)).array:AutomatonJS.examples.getNFA()
-// nfae_automatons = nfae_automatons?(JSON.parse(nfae_automatons)).array:AutomatonJS.examples.getNFAe()
-
-nfae_automatons = AutomatonJS.regexToNFAe_STEPS("(1+0.(0)*.1)*")
+nfae_automatons = nfae_automatons?(JSON.parse(nfae_automatons)).array:AutomatonJS.examples.getNFAe()
 
 updateList("DFA")
 updateList("NFA")
 updateList("NFAe")
 
+function getInputAlphabet(){return document.getElementById('automaton-alphabet').value.split(',')}
+function getInputName(){return document.getElementById('automaton-name').value}
+function getInputWord(){return document.getElementById('automaton-word').value}
+function getInputRegex(){return document.getElementById('regex-automaton').value}
+
+
+
 function saveAutomaton (mode) {
-	let alphabet = document.getElementById('automaton-alphabet').value
-	alphabet = alphabet.split(',')
-	let name = document.getElementById('automaton-name').value
-	console.log("name")
-	console.log(name)
+	let alphabet = getInputAlphabet()
+	let name = getInputName()
 	let automaton = undefined
 
 	try {
@@ -88,9 +90,13 @@ function loadAutomaton(id,mode){
 		example = nfae_automatons[id]
 	dataSet = example.toDataSet()
 	network.setData(dataSet)
-	document.getElementById('automaton-alphabet').value = Array.from(example.alphabet).join(",")
-	document.getElementById('automaton-name').value = example.name
+	showAutomatonInfo(example.name,example.alphabet)
 	currentAutomaton = example
+}
+
+function showAutomatonInfo(name,alphabetSet){
+	document.getElementById('automaton-alphabet').value = Array.from(alphabetSet).join(",")
+	document.getElementById('automaton-name').value = name
 }
 
 $('#save-dfa').on('click',e => {

@@ -27,19 +27,13 @@ export default class DFAre extends Automaton{
 			throw new UnknownStateError(toName)
 		if (from == to)
 			transitionName = transitionName
-		// transitionName.split(/,|\//).forEach(c => {
-		// 	if (!this.alphabet.has(c))
-		// 		throw new UnknownCharError(c)
-		// })
-		// if (!this.isDeterministic(from,transitionName))
-		// 	throw new DeterminismError(fromName,transitionName)
 
 		let existTransFromTo = from.transitions.find(x => x.to == toName)
 
 		if (existTransFromTo){
 			existTransFromTo.label = '('+existTransFromTo.label+'+'+transitionName+')'
-			console.log("existTransFromTo")
-			console.log(existTransFromTo.label)
+			// console.log("existTransFromTo")
+			// console.log(existTransFromTo.label)
 		}
 		else
 			from.addTransition(new Transition(transitionName,fromName,toName))
@@ -49,7 +43,7 @@ export default class DFAre extends Automaton{
 		let oneState = (this.states.filter(x => x.isInitial && x.isFinal).length > 0)?true:false
 
 		if (oneState) {
-			return this.toData().edges[0].label
+			return this.toData().edges[0].label + '*'
 		}else{
 			let initialState = this.states.find(x => x.isInitial)
 			let finalState = this.states.find(x => x.isFinal)

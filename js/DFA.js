@@ -79,8 +79,8 @@ export default class DFA extends Automaton{
 			let a = as[as.length-1]
 			regex.push('('+a.getRegex()+')')
 		}
-		console.log("regex")
-		console.log(regex.join('+'))
+		// console.log("regex")
+		// console.log(regex.join('+'))
 		return regex.join('+')
 	}
 
@@ -97,7 +97,7 @@ export default class DFA extends Automaton{
 			SetOfStepByStep.push(this.regexFor(automaton))
 		}
 
-		console.log(SetOfStepByStep)
+		// console.log(SetOfStepByStep)
 		return SetOfStepByStep
 	}
 
