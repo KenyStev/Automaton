@@ -153,7 +153,3 @@ function showMessageError(err){
 function init() {
   draw()
 }
-
-$('#clear-canvas').on('click', e => {
-  network.setData({})
-})

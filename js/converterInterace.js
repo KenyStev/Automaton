@@ -1,3 +1,4 @@
+var stepByStep = undefined
 
 function convertDFAToRE(event){
   convertToRE(event,"DFA")
@@ -17,7 +18,9 @@ function convertToRE(event,mode) {
     }
 
     currentAutomaton = automaton
-    let regex = currentAutomaton.toRE()
+    let regexData = currentAutomaton.toRE()
+    let regex = regexData.regex
+    stepByStep = regexData.stepByStep
 
     document.getElementById('show-message').innerHTML = `
       <div class="alert ${regex?'alert-success alert-dismissable':'alert-danger'}">
@@ -64,20 +67,40 @@ function convertToDFA(event,mode){
 
 function convertRegexToNFAE(event){
 	let regex = getInputRegex()
-	let automaton = AutomatonJS.regexToNFAe(regex)
-	currentAutomaton = automaton
-	dataSet = currentAutomaton.toDataSet()
-	network.setData(dataSet)
-	showAutomatonInfo(automaton.name,automaton.alphabet)
+	try{
+		let automatonData = AutomatonJS.regexToNFAe(regex)
+		currentAutomaton = automatonData.nfae
+		dataSet = currentAutomaton.toDataSet()
+		network.setData(dataSet)
+		showAutomatonInfo(currentAutomaton.name,currentAutomaton.alphabet)
+		stepByStep = [automatonData.stepByStep]
+
+		document.getElementById('show-message').innerHTML = `
+	      <div class="alert ${regex?'alert-success alert-dismissable':'alert-danger'}">
+	        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	        <strong>${currentAutomaton?"Valid":"Invalid"}!</strong>
+	        <button id="show-stepByStep" type="button" class="btn btn-warning btn-block">Step By Step</button>
+	      </div>
+	    `
+     document.getElementById("show-stepByStep").addEventListener("click", teLaCreisteWey)
+	}catch(err){
+		document.getElementById("show-message").innerHTML = `
+	      <div class="alert alert-danger">
+	        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+	        <strong>Invalid!</strong> 
+	        ${showMessageError(err)}
+	      </div>`;
+	}
+
 }
 
 function teLaCreisteWey(){
   alert("Te la creiste wey! ha-ha")
   document.getElementById("show-stepByStep").style.display = 'none'
-  showStepByStep()
+  showStepByStep(stepByStep)
 }
 
-function showStepByStep() {
+function showStepByStep(sbs) {
   document.getElementById("content-panel-sbs").innerHTML = `
     <div class="alert">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -85,7 +108,7 @@ function showStepByStep() {
     </div>
   `;
   let placeToShow =  document.getElementById("sbs-accordion")
-  let sbs = currentAutomaton.toREstepByStep()
+  // let sbs = currentAutomaton.toREstepByStep()
   let index = 0
 
   for(let s of sbs){
@@ -125,6 +148,10 @@ function showStepByStep() {
         height: '100%',
         width: '100%'
       });
+      let stepName = document.createTextNode(step.name)
+      let pNode = document.createElement('p')
+      pNode.appendChild(stepName)
+      nodeStep.insertBefore(pNode,nodeStep.firstChild)
       stepIndex++
     }
     index++

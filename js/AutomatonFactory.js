@@ -75,20 +75,20 @@ export function NewNFAe(data, name, alphabet) {
 
 export function regexToNFAe(regex){
 	seed = 0
-	let grammarTree = Parser.parse(regex)
-	let stepByStep = getStepByStepRegexToNFAE(grammarTree)
-	return stepByStep[stepByStep.length-1]
+	let stepByStep = regexToNFAe_STEPS(regex)
+	return {nfae: stepByStep[stepByStep.length-1], stepByStep: stepByStep}
 }
 
 export function regexToNFAe_STEPS(regex){
 	seed = 0
 	let grammarTree = Parser.parse(regex)
 	let stepByStep = getStepByStepRegexToNFAE(grammarTree)
-	return stepByStep.sort((a,b) => {
+	stepByStep.sort((a,b) => {
 		if (a.name < b.name) return -1
 		if (a.name > b.name) return 1
 		return 0
 	})
+	return stepByStep
 }
 
 function getStepByStepRegexToNFAE(node){
