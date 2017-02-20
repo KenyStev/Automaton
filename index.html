@@ -31,6 +31,7 @@
         <input id="automaton-name" class="form-control" value="" placeholder="name or description"/>
         <input id="automaton-alphabet" class="form-control" value="" placeholder="alphabet"/>
         <input id="automaton-word" class="form-control" value="" placeholder="word to try"/>
+        <input id="regex-automaton" class="form-control" value="" placeholder="regex to try"/>
 
         <button id="clear-canvas" type="button" class="btn btn-danger btn-block">Clear</button>
 
@@ -83,6 +84,22 @@
                 <button id="send-automaton-nfae" type="button" class="btn btn-primary btn-block">Evaluate</button>
                 <button id="convert-nfae-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
                 <div id="nfae-automatons" class="row list-group"></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven" class="collapsed">
+                  Regex
+                </a>
+              </h4>
+            </div>
+            <div id="collapseSeven" class="panel-collapse collapse">
+              <div class="panel-body">
+                <button id="save-regex" type="button" class="btn btn-success btn-block">Save</button>
+                <button id="convert-regex-nfae" type="button" class="btn btn-warning btn-block">Convert to NFA-E</button>
+                <div id="basic-regexes" class="row list-group"></div>
               </div>
             </div>
           </div>
@@ -150,5 +167,7 @@
 <script type="text/javascript" src="./js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./js/visManipulation.js"></script>
 <script type="text/javascript" src="./js/persistent.js"></script>
+<script type="text/javascript" src="./js/evaluatorInterface.js"></script>
+<script type="text/javascript" src="./js/converterInterace.js"></script>
 </body>
 </html>

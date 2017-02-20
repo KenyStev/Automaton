@@ -30,6 +30,6 @@ J = "(" E:E ")" { return E;  }
   / letter:letter { return letter; }
 
 letter = l:[a-zA-Z0-9] { return { "name":"character", "value": l }; }
-
+      
 //optional whitespace
 _  = [ \t\r\n]*

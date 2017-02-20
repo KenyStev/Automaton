@@ -39,7 +39,7 @@ automNFA.addTransition('0/1','q0','q0')
 automNFA.addTransition('0','q0','q1')
 automNFA.addTransition('1','q1','q2')
 
-const automNFA2 = new NFA("nfa-comienza con 1", ['0','1'])
+const automNFA2 = new NFA("nfa-antepenultino es 1", ['0','1'])
 
 automNFA2.addState('q0', true)
 automNFA2.addState('q1')
@@ -100,6 +100,10 @@ automNFAe_dfa2.addTransition('epsilon','q2','q3')
 automNFAe_dfa2.addTransition('epsilon','q3','q4')
 automNFAe_dfa2.addTransition('0','q4','q4')
 
+const regex1 = {regex: "(1+0.(0)*.1)*", name: "termina en 1"}
+const regex2 = {regex: "(0.(0)*)+(1)", name: "muchos ceros o un uno"}
+const regex3 = {regex: "(0+1)*.1.(0+1).(0+1)", name: "antepenultino 1"}
+
 exports.getDFA = function getDFA(){
 	return [automDFA,automDFA2]
 }
@@ -110,4 +114,8 @@ exports.getNFA = function getNFA(){
 
 exports.getNFAe = function getNFAe(){
 	return [automNFAe,automNFAe_dfa,automNFAe_dfa2]
+}
+
+exports.getRegex = function getRegex(){
+	return [regex1,regex2,regex3]
 }

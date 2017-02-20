@@ -5,17 +5,23 @@ var nfae_automatons = undefined//sessionStorage.getItem('nfae')
 dfa_automatons = dfa_automatons?(JSON.parse(dfa_automatons)).array:AutomatonJS.examples.getDFA()
 nfa_automatons = nfa_automatons?(JSON.parse(nfa_automatons)).array:AutomatonJS.examples.getNFA()
 nfae_automatons = nfae_automatons?(JSON.parse(nfae_automatons)).array:AutomatonJS.examples.getNFAe()
+regex_automatons = AutomatonJS.examples.getRegex()
 
 updateList("DFA")
 updateList("NFA")
 updateList("NFAe")
+updateList("regex")
+
+function getInputAlphabet(){return document.getElementById('automaton-alphabet').value.split(',')}
+function getInputName(){return document.getElementById('automaton-name').value}
+function getInputWord(){return document.getElementById('automaton-word').value}
+function getInputRegex(){return document.getElementById('regex-automaton').value}
+
+
 
 function saveAutomaton (mode) {
-	let alphabet = document.getElementById('automaton-alphabet').value
-	alphabet = alphabet.split(',')
-	let name = document.getElementById('automaton-name').value
-	console.log("name")
-	console.log(name)
+	let alphabet = getInputAlphabet()
+	let name = getInputName()
 	let automaton = undefined
 
 	try {
@@ -31,6 +37,8 @@ function saveAutomaton (mode) {
 	      automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
 	      nfae_automatons.push(automaton)
 	      sessionStorage.setItem('nfae',JSON.stringify({array: nfae_automatons}))
+	    }else if (mode == "regex") {
+	    	regex_automatons.push({regex: getInputRegex(), name: getInputName()})
 	    }
 
 	    updateList(mode)
@@ -60,6 +68,10 @@ function updateList(mode){
 		document.getElementById('nfae-automatons').innerHTML = `
 			${generateItems(nfae_automatons,mode)}
 		`
+	}else if (mode=="regex") {
+		document.getElementById('basic-regexes').innerHTML = `
+			${generateItems(regex_automatons,mode)}
+		`
 	}
 }
 
@@ -67,10 +79,8 @@ function generateItems(data,mode){
 	let html = ""
 	let index = 0
 	for(let d of data){
-		console.log("d of data")
-		console.log(d)
 		html += `<a href='#' class='list-group-item' onclick='loadAutomaton(${index},"${mode}")'>
-					<h4 class='list-group-item-heading'>automaton  ${index} - ${d.name}</h4>
+					<h4 class='list-group-item-heading'>${(mode=="regex")?'regex':'automaton'}  ${index} - ${d.name}</h4>
 				</a>`;
 		index += 1
 	}
@@ -86,11 +96,24 @@ function loadAutomaton(id,mode){
 		example = nfa_automatons[id]
 	else if (mode=="NFAe")
 		example = nfae_automatons[id]
-	dataSet = example.toDataSet()
-	network.setData(dataSet)
-	document.getElementById('automaton-alphabet').value = Array.from(example.alphabet).join(",")
-	document.getElementById('automaton-name').value = example.name
+	else if (mode=="regex")
+		showRegexInfo(regex_automatons[id])
+	if (mode!="regex") {
+		dataSet = example.toDataSet()
+		network.setData(dataSet)
+		showAutomatonInfo(example.name,example.alphabet)
+	}
 	currentAutomaton = example
+}
+
+function showAutomatonInfo(name,alphabetSet){
+	document.getElementById('automaton-alphabet').value = Array.from(alphabetSet).join(",")
+	document.getElementById('automaton-name').value = name
+}
+
+function showRegexInfo(data){
+	document.getElementById('automaton-name').value = data.name
+	document.getElementById('regex-automaton').value = data.regex
 }
 
 $('#save-dfa').on('click',e => {
@@ -103,4 +126,15 @@ $('#save-nfa').on('click',e => {
 
 $('#save-nfae').on('click',e => {
 	saveAutomaton("NFAe")
+})
+
+$('#save-regex').on('click',e => {
+	saveAutomaton("regex")
+})
+
+$('#clear-canvas').on('click', e => {
+  network.setData({})
+  showAutomatonInfo("","")
+  document.getElementById('automaton-word').value = ""
+  document.getElementById('regex-automaton').value = ""
 })

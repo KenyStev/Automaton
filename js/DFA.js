@@ -61,7 +61,7 @@ export default class DFA extends Automaton{
 	}
 
 	genereteDFA(state){
-		let dfa = new DFA(this.name,Array.from(this.alphabet))
+		let dfa = new DFA("selected final state: "+state.label,Array.from(this.alphabet))
 		this.states.forEach(s => {
 			dfa.addState(s.label,s.isInitial,s.label == state.label)
 		})
@@ -79,9 +79,9 @@ export default class DFA extends Automaton{
 			let a = as[as.length-1]
 			regex.push('('+a.getRegex()+')')
 		}
-		console.log("regex")
-		console.log(regex.join('+'))
-		return regex.join('+')
+		// console.log("regex")
+		// console.log(regex.join('+'))
+		return {regex: regex.join('+'), stepByStep: automatons}
 	}
 
 	toREstepByStep(){
@@ -97,7 +97,7 @@ export default class DFA extends Automaton{
 			SetOfStepByStep.push(this.regexFor(automaton))
 		}
 
-		console.log(SetOfStepByStep)
+		// console.log(SetOfStepByStep)
 		return SetOfStepByStep
 	}
 
@@ -127,7 +127,7 @@ export default class DFA extends Automaton{
 				if (cerraduraEdge)
 					toEdges.forEach(edge => edge.label += '.('+cerraduraEdge.label+')*')
 
-				let currentAutomaton = new DFAre(backAutomaton.name,Array.from(backAutomaton.alphabet))
+				let currentAutomaton = new DFAre("deleted state: "+stateToDelete.label,Array.from(backAutomaton.alphabet))
 
 				data.nodes.filter(x => x.label != stateToDelete.label).forEach(state => {
 					currentAutomaton.addState(state.label,state.isInitial,state.isFinal)
