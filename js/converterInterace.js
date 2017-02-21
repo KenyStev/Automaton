@@ -97,7 +97,7 @@ function convertRegexToNFAE(event){
 function teLaCreisteWey(){
   alert("Te la creiste wey! ha-ha")
   document.getElementById("show-stepByStep").style.display = 'none'
-  showStepByStep(stepByStep)
+  // showStepByStep(stepByStep)
 }
 
 function showStepByStep(sbs) {

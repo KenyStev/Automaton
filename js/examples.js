@@ -100,6 +100,18 @@ automNFAe_dfa2.addTransition('epsilon','q2','q3')
 automNFAe_dfa2.addTransition('epsilon','q3','q4')
 automNFAe_dfa2.addTransition('0','q4','q4')
 
+const termina_01_010 = new NFAe("termina en 01 o 010",['0','1'])
+
+termina_01_010.addState('q0',true)
+termina_01_010.addState('q1')
+termina_01_010.addState('q2')
+termina_01_010.addState('q3',false,true)
+
+termina_01_010.addTransition('0/1','q0','q0')
+termina_01_010.addTransition('0','q0','q1')
+termina_01_010.addTransition('1','q1','q2')
+termina_01_010.addTransition('0/epsilon','q2','q3')
+
 const regex1 = {regex: "(1+0.(0)*.1)*", name: "termina en 1"}
 const regex2 = {regex: "(0.(0)*)+(1)", name: "muchos ceros o un uno"}
 const regex3 = {regex: "(0+1)*.1.(0+1).(0+1)", name: "antepenultino 1"}
@@ -113,7 +125,7 @@ exports.getNFA = function getNFA(){
 }
 
 exports.getNFAe = function getNFAe(){
-	return [automNFAe,automNFAe_dfa,automNFAe_dfa2]
+	return [automNFAe,automNFAe_dfa,automNFAe_dfa2,termina_01_010]
 }
 
 exports.getRegex = function getRegex(){
