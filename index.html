@@ -103,6 +103,24 @@
               </div>
             </div>
           </div>
+          <div class="panel">
+            <div class="panel-heading">
+              <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseEight" class="collapsed">
+                  Set Operations
+                </a>
+              </h4>
+            </div>
+            <div id="collapseEight" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a id="union-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Union</a>
+                <a id="intersection-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Intersection</a>
+                <a id="difference-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Difference</a>
+                <a id="complement-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Complement</a>
+                <div id="basic-regexes" class="row list-group"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -113,6 +131,26 @@
   <hr/>
   <div id="content-panel-sbs" class="row"></div>
   <div id="modals-container" class="row">
+    <div id="dfa-operation-modal" class="modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 id="dfa-operation-title" class="modal-title">Union</h4>
+          </div>
+          <div class="modal-body">
+            <div class="selecter  multiple" tabindex="0">
+              <div id="selecter-dfa0" class="selecter-options"></div>
+              <div id="selecter-dfa1" class="selecter-options"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success generate-operation" data-dismiss="modal" value="save" id="Generate-union">Generate</button>
+            <button type="button" class="btn btn-default modal-cancel" data-dismiss="modal" value="cancel">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="node-popUp" class="modal">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -168,5 +206,6 @@
 <script type="text/javascript" src="./js/persistent.js"></script>
 <script type="text/javascript" src="./js/evaluatorInterface.js"></script>
 <script type="text/javascript" src="./js/converterInterace.js"></script>
+<script type="text/javascript" src="./js/setOperationsInterface.js"></script>
 </body>
 </html>
