@@ -10,6 +10,7 @@ import {
 ,	unionAutomaton
 ,	intersectionAutomaton
 ,	differenceAutomaton
+,	complementAutomaton
 } from "./AutomatonFactory"
 import Parser from "./regular-expression-parser/regular-expression"
 // import vis from "../node_modules/vis"
@@ -23,3 +24,4 @@ exports.regexToNFAe_STEPS = regexToNFAe_STEPS;
 exports.unionAutomaton = unionAutomaton;
 exports.intersectionAutomaton = intersectionAutomaton;
 exports.differenceAutomaton = differenceAutomaton;
+exports.complementAutomaton = complementAutomaton;

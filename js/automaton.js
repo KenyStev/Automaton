@@ -80,6 +80,10 @@ export class State {
 	setFinal(isFinal = true){
 		this.isFinal = isFinal
 	}
+
+	hasTransition(symbol){
+		return this.transitions.filter(t => t.match(symbol)).length>0
+	}
 }
 
 export class Transition {

@@ -7,9 +7,12 @@ nfa_automatons = nfa_automatons?(JSON.parse(nfa_automatons)).array:AutomatonJS.e
 nfae_automatons = nfae_automatons?(JSON.parse(nfae_automatons)).array:AutomatonJS.examples.getNFAe()
 regex_automatons = AutomatonJS.examples.getRegex()
 
-dfa_automatons.push(AutomatonJS.unionAutomaton(dfa_automatons[0],dfa_automatons[1]))
-dfa_automatons.push(AutomatonJS.intersectionAutomaton(dfa_automatons[0],dfa_automatons[1]))
-dfa_automatons.push(AutomatonJS.differenceAutomaton(dfa_automatons[0],dfa_automatons[1]))
+// dfa_automatons.push(AutomatonJS.unionAutomaton(dfa_automatons[0],dfa_automatons[1]))
+// dfa_automatons.push(AutomatonJS.intersectionAutomaton(dfa_automatons[0],dfa_automatons[1]))
+// dfa_automatons.push(AutomatonJS.differenceAutomaton(dfa_automatons[0],dfa_automatons[1]))
+// dfa_automatons.push(AutomatonJS.complementAutomaton(dfa_automatons[0]))
+// dfa_automatons.push(AutomatonJS.complementAutomaton(dfa_automatons[1]))
+// dfa_automatons.push(AutomatonJS.complementAutomaton(dfa_automatons[2]))
 
 updateList("DFA")
 updateList("NFA")

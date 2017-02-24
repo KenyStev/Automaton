@@ -101,6 +101,11 @@ export function differenceAutomaton(dfa0,dfa1){
 	return setFinalStatesForDifference(fusedAutomaton,dfa0,dfa1)
 }
 
+export function complementAutomaton(dfa){
+	let complemented = changeFinalStates("complement: "+dfa.name,dfa)
+	return lookForSink(complemented)
+}
+
 //operaciones con automatas
 function getStateLabel(state0,state1){
 	return state0.label+'/a,'+state1.label+'/b'
@@ -185,6 +190,32 @@ function setFinalStatesForDifference(fusedAutomaton,dfa0,dfa1){
 		state.setFinal()
 	})
 	return fusedAutomaton
+}
+
+function changeFinalStates(name,dfa){
+	let complement = new DFA(name,Array.from(dfa.alphabet))
+	
+	dfa.states.forEach(state => complement.addState(state.label,state.isInitial,!state.isFinal))
+	dfa.states.forEach(state => state.transitions.forEach(t => complement.addTransition(t.label,t.from,t.to)))
+	return complement
+}
+
+function lookForSink(dfa){
+	let sink = 'sink'
+	let addedSink = false
+	for(let state of dfa.states){
+		for(let a of dfa.alphabet){
+			if(!state.hasTransition(a)){
+				if (!addedSink) {
+					dfa.addState(sink,false,true)
+					dfa.addTransition(Array.from(dfa.alphabet).join('/'),sink,sink)
+					addedSink = true
+				}
+				dfa.addTransition(a,state.label,sink)
+			}
+		}
+	}
+	return dfa
 }
 
 //convert to regex
