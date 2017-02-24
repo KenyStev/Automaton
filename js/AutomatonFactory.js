@@ -86,6 +86,108 @@ export function regexToNFAe_STEPS(regex){
 	return stepByStep
 }
 
+export function unionAutomaton(dfa0,dfa1){
+	let fusedAutomaton = fuseAutomatons("union: "+dfa0.name+' U '+dfa1.name,dfa0,dfa1)
+	return setFinalStatesForUnion(fusedAutomaton,dfa0,dfa1)
+}
+
+export function intersectionAutomaton(dfa0,dfa1){
+	let fusedAutomaton = fuseAutomatons("intersection: "+dfa0.name+' N '+dfa1.name,dfa0,dfa1)
+	return setFinalStatesForIntersection(fusedAutomaton,dfa0,dfa1)
+}
+
+export function differenceAutomaton(dfa0,dfa1){
+	let fusedAutomaton = fuseAutomatons("difference: "+dfa0.name+' - '+dfa1.name,dfa0,dfa1)
+	return setFinalStatesForDifference(fusedAutomaton,dfa0,dfa1)
+}
+
+//operaciones con automatas
+function getStateLabel(state0,state1){
+	return state0.label+'/a,'+state1.label+'/b'
+}
+
+function getStateForSymbol(state,dfa0,dfa1,a){
+	let statesCmb = state.label.split(',')
+	let states = []
+	for(let s of statesCmb){
+		let fromState = undefined
+		let toState = undefined
+		let fromIdentifier = s.split('/')
+		if (fromIdentifier[1]=='a') {
+			fromState = dfa0.states.find(x => x.label == fromIdentifier[0])
+		}else{
+			fromState = dfa1.states.find(x => x.label == fromIdentifier[0])
+		}
+		if (fromState) {toState = fromState.transitions.find(x => x.match(a))}
+		if (toState) {states.push(toState.to+'/'+fromIdentifier[1])}
+	}
+	return states.sort().join(',')
+}
+
+function fuseAutomatons(name,dfa0,dfa1){
+	let newAlphabet = new Set(Array.from(dfa0.alphabet).concat(Array.from(dfa0.alphabet),Array.from(dfa1.alphabet)))
+	let fusedAutomaton = new DFA(name,Array.from(newAlphabet))
+
+	let initialState0 = dfa0.getInitialState()
+	let initialState1 = dfa1.getInitialState()
+
+	fusedAutomaton.addState(getStateLabel(initialState0,initialState1),true)
+
+	for(let state of fusedAutomaton.states){
+		for(let a of Array.from(newAlphabet)){
+			let newState = getStateForSymbol(state,dfa0,dfa1,a)
+			if (!fusedAutomaton.states.find(x => x.label==newState)) {
+				fusedAutomaton.addState(newState)
+			}
+			fusedAutomaton.addTransition(a,state.label,newState)
+		}
+	}
+
+	return fusedAutomaton
+}
+
+function setFinalStatesForUnion(fusedAutomaton,dfa0,dfa1){
+	let finalStates0 = dfa0.states.filter(x => x.isFinal).map(x => x.label+'/a')
+	let finalStates1 = dfa1.states.filter(x => x.isFinal).map(x => x.label+'/b')
+	let finalStates = finalStates0.concat(finalStates0,finalStates1)
+
+	for(let finalState of finalStates){
+		fusedAutomaton.states.filter(x => x.label.indexOf(finalState)!=-1).forEach(state => {
+			state.setFinal()
+		})
+	}
+	return fusedAutomaton
+}
+
+function setFinalStatesForIntersection(fusedAutomaton,dfa0,dfa1){
+	let finalStates0 = dfa0.states.filter(x => x.isFinal).map(x => x.label+'/a')
+	let finalStates1 = dfa1.states.filter(x => x.isFinal).map(x => x.label+'/b')
+
+	fusedAutomaton.states.filter(x => {
+		let state = finalStates0.filter(fs0 => x.label.indexOf(fs0)!=-1).length>0
+		if (!state) return false
+		return finalStates1.filter(fs1 => x.label.indexOf(fs1)!=-1).length>0
+	}).forEach(state => {
+		state.setFinal()
+	})
+	return fusedAutomaton
+}
+
+function setFinalStatesForDifference(fusedAutomaton,dfa0,dfa1){
+	let finalStates0 = dfa0.states.filter(x => x.isFinal).map(x => x.label+'/a')
+	let finalStates1 = dfa1.states.filter(x => x.isFinal).map(x => x.label+'/b')
+
+	fusedAutomaton.states.filter(x => {
+		let state = finalStates0.filter(fs0 => x.label.indexOf(fs0)!=-1).length>0
+		if (!state) return false
+		return finalStates1.filter(fs1 => x.label.indexOf(fs1)!=-1).length==0
+	}).forEach(state => {
+		state.setFinal()
+	})
+	return fusedAutomaton
+}
+
+//convert to regex
 function getStepByStepRegexToNFAE(node){
 	let stepByStep = []
 

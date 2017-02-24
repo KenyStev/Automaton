@@ -23,17 +23,16 @@ export default class Automaton {
 	}
 
 	addTransition(transition) {
-		const from = this.states.filter(e => e.label == transition.from)[0]
+		const from = this.states.find(e => e.label == transition.from)
 		from.addTransition(transition)
 	}
 
 	findState(stateName) {
-		return this.states.filter(e => e.label == stateName)[0];
+		return this.states.find(e => e.label == stateName)
 	}
 
 	getInitialState(){
-		let currentState = this.states.filter(e => e.isInitial)[0]
-		return currentState
+		return this.states.find(e => e.isInitial)
 	}
 
 	toDataSet(){
@@ -72,6 +71,14 @@ export class State {
 
 	addTransition(transition){
 		this.transitions.push(transition)
+	}
+
+	setInitial(isInitial = true){
+		this.isInitial = isInitial
+	}
+
+	setFinal(isFinal = true){
+		this.isFinal = isFinal
 	}
 }
 
