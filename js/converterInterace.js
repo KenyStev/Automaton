@@ -60,9 +60,7 @@ function convertToDFA(event,mode){
     automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
 
   currentAutomaton = automaton.toDFA()
-  dataSet = currentAutomaton.toDataSet()
-  network.setData(dataSet)
-  showAutomatonInfo(automaton.name,automaton.alphabet)
+  setAutomaton(currentAutomaton)
 }
 
 function convertRegexToNFAE(event){
@@ -70,9 +68,7 @@ function convertRegexToNFAE(event){
 	try{
 		let automatonData = AutomatonJS.regexToNFAe(regex)
 		currentAutomaton = automatonData.nfae
-		dataSet = currentAutomaton.toDataSet()
-		network.setData(dataSet)
-		showAutomatonInfo(currentAutomaton.name,currentAutomaton.alphabet)
+    setAutomaton(currentAutomaton)
 		stepByStep = [automatonData.stepByStep]
 
 		document.getElementById('show-message').innerHTML = `

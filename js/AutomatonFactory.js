@@ -21,14 +21,14 @@ function nextStep(){
 
 export function NewDFA(data, name, alphabet) {
 	const DFAutomaton = new DFA(name, alphabet)
-	let states = objectToArray(data.nodes._data)
+	let states = objectToArray(('_data' in data.nodes)?data.nodes._data:data.nodes)
 	states.forEach(state => {
 		DFAutomaton.addState(state.label,
 			state.nodeId.toString().indexOf("start")!==-1,
 			state.nodeId.toString().indexOf("end")!==-1)
 	})
 
-	let transitions = objectToArray(data.edges._data)
+	let transitions = objectToArray(('_data' in data.edges)?data.edges._data:data.edges)
 	transitions.forEach(transition => {
 		DFAutomaton.addTransition(transition.label,
 			getState(data,transition.from).label, getState(data,transition.to).label)
@@ -39,14 +39,14 @@ export function NewDFA(data, name, alphabet) {
 
 export function NewNFA(data, name, alphabet) {
 	const NFAutomaton = new NFA(name, alphabet)
-	let states = objectToArray(data.nodes._data)
+	let states = objectToArray(('_data' in data.nodes)?data.nodes._data:data.nodes)
 	states.forEach(state => {
 		NFAutomaton.addState(state.label,
 			state.nodeId.toString().indexOf("start")!==-1,
 			state.nodeId.toString().indexOf("end")!==-1)
 	})
 
-	let transitions = objectToArray(data.edges._data)
+	let transitions = objectToArray(('_data' in data.edges)?data.edges._data:data.edges)
 	transitions.forEach(transition => {
 		NFAutomaton.addTransition(transition.label,
 			getState(data,transition.from).label, getState(data,transition.to).label)
@@ -57,14 +57,14 @@ export function NewNFA(data, name, alphabet) {
 
 export function NewNFAe(data, name, alphabet) {
 	const NFAeutomaton = new NFAe(name, alphabet)
-	let states = objectToArray(data.nodes._data)
+	let states = objectToArray(('_data' in data.nodes)?data.nodes._data:data.nodes)
 	states.forEach(state => {
 		NFAeutomaton.addState(state.label,
 			state.nodeId.toString().indexOf("start")!==-1,
 			state.nodeId.toString().indexOf("end")!==-1)
 	})
 
-	let transitions = objectToArray(data.edges._data)
+	let transitions = objectToArray(('_data' in data.edges)?data.edges._data:data.edges)
 	transitions.forEach(transition => {
 		NFAeutomaton.addTransition(transition.label,
 			getState(data,transition.from).label, getState(data,transition.to).label)
@@ -356,5 +356,7 @@ function objectToArray(obj) {
 }
 
 function getState(data, id) {
-	return data.nodes._data[id]
+	if ('_data' in data.nodes)
+		return data.nodes._data[id]
+	return data.nodes.find(x => x.id == id)
 }

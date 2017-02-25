@@ -150,6 +150,21 @@ function showMessageError(err){
   return ""
 }
 
+function showAutomatonInfo(name,alphabetSet){
+  document.getElementById('automaton-alphabet').value = Array.from(alphabetSet).join(",")
+  document.getElementById('automaton-name').value = name
+}
+
+function showRegexInfo(data){
+  document.getElementById('automaton-name').value = data.name
+  document.getElementById('regex-automaton').value = data.regex
+}
+
+function setAutomaton(automaton){
+  network.setData(automaton.toDataSet())
+  showAutomatonInfo(automaton.name,automaton.alphabet)
+}
+
 function init() {
   draw()
 }

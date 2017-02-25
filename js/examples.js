@@ -124,15 +124,30 @@ const regex2 = {regex: "(0.(0)*)+(1)", name: "muchos ceros o un uno"}
 const regex3 = {regex: "(0+1)*.1.(0+1).(0+1)", name: "antepenultino 1"}
 
 exports.getDFA = function getDFA(){
-	return [automDFA,automDFA2,comienzaEnCero]
+	let listToLoad = [automDFA,automDFA2,comienzaEnCero]
+	listToLoad = listToLoad.map(x => {
+		return {name: x.name,
+				alphabet: Array.from(x.alphabet),
+				dataset: x.toDataSet()}})
+	return listToLoad
 }
 
 exports.getNFA = function getNFA(){
-	return [automNFA,automNFA2]
+	let listToLoad = [automNFA,automNFA2]
+	listToLoad = listToLoad.map(x => {
+		return {name: x.name,
+				alphabet: Array.from(x.alphabet),
+				dataset: x.toDataSet()}})
+	return listToLoad
 }
 
 exports.getNFAe = function getNFAe(){
-	return [automNFAe,automNFAe_dfa,automNFAe_dfa2,termina_01_010]
+	let listToLoad = [automNFAe,automNFAe_dfa,automNFAe_dfa2,termina_01_010]
+	listToLoad = listToLoad.map(x => {
+		return {name: x.name,
+				alphabet: Array.from(x.alphabet),
+				dataset: x.toDataSet()}})
+	return listToLoad
 }
 
 exports.getRegex = function getRegex(){
