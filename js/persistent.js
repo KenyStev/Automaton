@@ -106,7 +106,6 @@ function loadAutomaton(id,mode){
 	if (mode=="DFA"){
 		let dataObj = dfa_automatons[id]
 		example = AutomatonJS.NewDFA(dataObj.dataset,dataObj.name,dataObj.alphabet)
-		example = example.minimize()
 	}
 	else if (mode=="NFA"){
 		example = nfa_automatons[id]
