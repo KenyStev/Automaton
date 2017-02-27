@@ -168,6 +168,7 @@ export default class DFA extends Automaton{
 			}
 		}
 		console.log(JSON.stringify(equivalentes))
+		return this.mergeEquivalents(equivalentes)
 	}
 
 	DFS(Q,P,V,E){
@@ -206,11 +207,99 @@ export default class DFA extends Automaton{
 				}
 			}
 		}
-		console.log("EQ: "+EQ)
+		
 		if (EQ && Q.isFinal == P.isFinal && !this.areEquivalents(Q,P,E)) {
-			console.log("added: "+Q.label+' - '+P.label)
+			console.log("EQ: "+Q.label+' - '+P.label)
 			E.push({Q1: Q, Q2: P})
 		}
+	}
+
+	mergeEquivalents(E){
+		let automatonMin = new DFA("minimized: "+this.name,Array.from(this.alphabet))
+		let newStates = []
+		let newTransitions = new Set()
+
+		for(let e of E){
+			let newState = new Set()
+			newState.add(e.Q1.label)
+			newState.add(e.Q2.label)
+			let isStillInitial = e.Q1.isInitial || e.Q2.isInitial
+			if(newStates.filter(x => x.label.indexOf(e.Q1.label)>=0 || x.label.indexOf(e.Q2.label)>=0).length>0) continue
+			let duplicated = E.filter(x => x.Q1.label == e.Q1.label || x.Q1.label == e.Q2.label 
+				|| x.Q2.label == e.Q1.label || x.Q2.label == e.Q2.label)
+			for(let d of duplicated){
+				newState.add(d.Q1.label)
+				newState.add(d.Q2.label)
+				isStillInitial = isStillInitial || d.Q1.isInitial || d.Q2.isInitial
+				E = E.filter(x => x.Q1.label != d.Q1.label && x.Q2.label != d.Q2.label)
+			}
+			let newStateLabel = Array.from(newState).sort().join(',')
+			newStates.push({
+				label:newStateLabel,
+				isInitial:isStillInitial,
+				isFinal:e.Q1.isFinal})
+
+			for(let ns of newState){
+				let state = this.findState(ns)
+				state.transitions.forEach(trans => {
+					let equivalent = newStates.find(x => x.label.indexOf(trans.to)>=0)
+					let nt = undefined
+					if(equivalent){
+						nt = {
+							label:trans.label,
+							from:newStateLabel,
+							to:equivalent.label
+						}
+					}
+					else{
+						nt = {
+							label:trans.label,
+							from:newStateLabel,
+							to:trans.to
+						}
+					}
+					if(nt && !Array.from(newTransitions).find(x => x.label == nt.label 
+						&& x.from == nt.from && x.to == nt.to))
+						newTransitions.add(nt)
+				})
+			}
+		}
+
+		for(let state of newStates){
+			automatonMin.addState(state.label,state.isInitial,state.isFinal)
+		}
+
+		for(let state of this.states){
+			// E.find(x => (x.Q1.label == state.label) || (x.Q2.label == state.label))
+			if(!newStates.find(x => (x.label.indexOf(state.label)>=0) || (x.label.indexOf(state.label)>=0))){
+				automatonMin.addState(state.label,state.isInitial,state.isFinal)
+				state.transitions.forEach(trans => {
+					// let stateTo = this.findState(trans.to)
+					let equivalent = newStates.find(x => (x.label.indexOf(trans.to)>=0) || (x.label.indexOf(trans.to)>=0))
+					if (equivalent){
+						newTransitions.add({
+							label:trans.label,
+							from: trans.from,
+							to: equivalent.label
+						})
+					}
+					else{
+						newTransitions.add({
+							label:trans.label,
+							from: trans.from,
+							to: trans.to
+						})
+					}
+				})
+			}
+		}
+
+		console.log("newStates & newTransitions")
+		console.log(JSON.stringify({newStates: newStates,newTransitions: Array.from(newTransitions)}))
+		for(let nt of newTransitions){
+			automatonMin.addTransition(nt.label,nt.from,nt.to)
+		}
+		return automatonMin
 	}
 
 	areEquivalents(Q,P,E){
