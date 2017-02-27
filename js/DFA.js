@@ -4,7 +4,8 @@ import { UnknownCharError,
 		UnknownStateError, 
 		DeterminismError, 
 		StateAlreadyExistError,
-		NextTransitionError 
+		NextTransitionError,
+		AlreadyMinimizedError
 } from "./errors"
 
 var contter = 0
@@ -168,7 +169,10 @@ export default class DFA extends Automaton{
 			}
 		}
 		console.log(JSON.stringify(equivalentes))
-		return this.mergeEquivalents(equivalentes)
+		let minimized = this.mergeEquivalents(equivalentes)
+		if (minimized.states.length == this.states.length) 
+			throw new AlreadyMinimizedError(this.name)
+		return minimized
 	}
 
 	DFS(Q,P,V,E){
@@ -258,7 +262,8 @@ export default class DFA extends Automaton{
 							to:trans.to
 						}
 					}
-					if(nt && !Array.from(newTransitions).find(x => x.label == nt.label 
+					if(nt && !Array.from(newTransitions).find(x => (x.label.indexOf(nt.label)>=0
+						|| nt.label.indexOf(x.label)>=0) 
 						&& x.from == nt.from && x.to == nt.to))
 						newTransitions.add(nt)
 				})
@@ -276,20 +281,25 @@ export default class DFA extends Automaton{
 				state.transitions.forEach(trans => {
 					// let stateTo = this.findState(trans.to)
 					let equivalent = newStates.find(x => (x.label.indexOf(trans.to)>=0) || (x.label.indexOf(trans.to)>=0))
+					let nt = undefined
 					if (equivalent){
-						newTransitions.add({
+						nt = {
 							label:trans.label,
 							from: trans.from,
 							to: equivalent.label
-						})
+						}
 					}
 					else{
-						newTransitions.add({
+						nt = {
 							label:trans.label,
 							from: trans.from,
 							to: trans.to
-						})
+						}
 					}
+					if(nt && !Array.from(newTransitions).find(x => (x.label.indexOf(nt.label)>=0 
+						|| nt.label.indexOf(x.label)>=0) 
+						&& x.from == nt.from && x.to == nt.to))
+						newTransitions.add(nt)
 				})
 			}
 		}
