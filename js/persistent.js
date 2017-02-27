@@ -1,7 +1,7 @@
-var dfa_automatons = sessionStorage.getItem('dfa')
-var nfa_automatons = sessionStorage.getItem('nfa')
-var nfae_automatons = sessionStorage.getItem('nfae')
-var regex_automatons = sessionStorage.getItem('regex')
+var dfa_automatons = localStorage.getItem('dfa')
+var nfa_automatons = localStorage.getItem('nfa')
+var nfae_automatons = localStorage.getItem('nfae')
+var regex_automatons = localStorage.getItem('regex')
 
 dfa_automatons = dfa_automatons?(JSON.parse(dfa_automatons)).array:AutomatonJS.examples.getDFA()
 nfa_automatons = nfa_automatons?(JSON.parse(nfa_automatons)).array:AutomatonJS.examples.getNFA()
@@ -33,7 +33,7 @@ function saveAutomaton (mode) {
 	      	alphabet: Array.from(automaton.alphabet),
 	      	dataset: automaton.toDataSet()
 	      })
-	      sessionStorage.setItem('dfa',JSON.stringify({array: dfa_automatons}))
+	      localStorage.setItem('dfa',JSON.stringify({array: dfa_automatons}))
 	    }else if (mode == "NFA"){
 	      automaton = AutomatonJS.NewNFA(network.body.data,name,alphabet)
 	      nfa_automatons.push({
@@ -41,7 +41,7 @@ function saveAutomaton (mode) {
 	      	alphabet: Array.from(automaton.alphabet),
 	      	dataset: automaton.toDataSet()
 	      })
-	      sessionStorage.setItem('nfa',JSON.stringify({array: nfa_automatons}))
+	      localStorage.setItem('nfa',JSON.stringify({array: nfa_automatons}))
 	    }else if (mode == "NFAe"){
 	      automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
 	      nfae_automatons.push({
@@ -49,10 +49,10 @@ function saveAutomaton (mode) {
 	      	alphabet: Array.from(automaton.alphabet),
 	      	dataset: automaton.toDataSet()
 	      })
-	      sessionStorage.setItem('nfae',JSON.stringify({array: nfae_automatons}))
+	      localStorage.setItem('nfae',JSON.stringify({array: nfae_automatons}))
 	    }else if (mode == "regex") {
 	    	regex_automatons.push({regex: getInputRegex(), name: getInputName()})
-	    	sessionStorage.setItem('regex',JSON.stringify({array: regex_automatons}))
+	    	localStorage.setItem('regex',JSON.stringify({array: regex_automatons}))
 	    }
 
 	    updateList(mode)
@@ -106,6 +106,7 @@ function loadAutomaton(id,mode){
 	if (mode=="DFA"){
 		let dataObj = dfa_automatons[id]
 		example = AutomatonJS.NewDFA(dataObj.dataset,dataObj.name,dataObj.alphabet)
+		example.minimize()
 	}
 	else if (mode=="NFA"){
 		example = nfa_automatons[id]
