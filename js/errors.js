@@ -27,3 +27,9 @@ export class NextTransitionError extends Error {
         super(`Transition '${transition}' not valid.`)
     }
 }
+
+export class AlreadyMinimizedError extends Error {
+    constructor(name) {
+        super(`The automaton: '${name}' is already minimized.`)
+    }
+}

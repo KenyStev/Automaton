@@ -1,18 +1,12 @@
-var dfa_automatons = undefined// sessionStorage.getItem('dfa')
-var nfa_automatons = undefined//sessionStorage.getItem('nfa')
-var nfae_automatons = undefined//sessionStorage.getItem('nfae')
+var dfa_automatons = localStorage.getItem('dfa')
+var nfa_automatons = localStorage.getItem('nfa')
+var nfae_automatons = localStorage.getItem('nfae')
+var regex_automatons = localStorage.getItem('regex')
 
 dfa_automatons = dfa_automatons?(JSON.parse(dfa_automatons)).array:AutomatonJS.examples.getDFA()
 nfa_automatons = nfa_automatons?(JSON.parse(nfa_automatons)).array:AutomatonJS.examples.getNFA()
 nfae_automatons = nfae_automatons?(JSON.parse(nfae_automatons)).array:AutomatonJS.examples.getNFAe()
-regex_automatons = AutomatonJS.examples.getRegex()
-
-// dfa_automatons.push(AutomatonJS.unionAutomaton(dfa_automatons[0],dfa_automatons[1]))
-// dfa_automatons.push(AutomatonJS.intersectionAutomaton(dfa_automatons[0],dfa_automatons[1]))
-// dfa_automatons.push(AutomatonJS.differenceAutomaton(dfa_automatons[0],dfa_automatons[1]))
-// dfa_automatons.push(AutomatonJS.complementAutomaton(dfa_automatons[0]))
-// dfa_automatons.push(AutomatonJS.complementAutomaton(dfa_automatons[1]))
-// dfa_automatons.push(AutomatonJS.complementAutomaton(dfa_automatons[2]))
+regex_automatons = regex_automatons?(JSON.parse(regex_automatons)).array:AutomatonJS.examples.getRegex()
 
 updateList("DFA")
 updateList("NFA")
@@ -34,18 +28,31 @@ function saveAutomaton (mode) {
 	try {
 		if (mode == "DFA"){
 	      automaton = AutomatonJS.NewDFA(network.body.data,name,alphabet)
-	      dfa_automatons.push(automaton)
-	      sessionStorage.setItem('dfa',JSON.stringify({array: dfa_automatons}))
+	      dfa_automatons.push({
+	      	name: automaton.name,
+	      	alphabet: Array.from(automaton.alphabet),
+	      	dataset: automaton.toDataSet()
+	      })
+	      localStorage.setItem('dfa',JSON.stringify({array: dfa_automatons}))
 	    }else if (mode == "NFA"){
 	      automaton = AutomatonJS.NewNFA(network.body.data,name,alphabet)
-	      nfa_automatons.push(automaton)
-	      sessionStorage.setItem('nfa',JSON.stringify({array: nfa_automatons}))
+	      nfa_automatons.push({
+	      	name: automaton.name,
+	      	alphabet: Array.from(automaton.alphabet),
+	      	dataset: automaton.toDataSet()
+	      })
+	      localStorage.setItem('nfa',JSON.stringify({array: nfa_automatons}))
 	    }else if (mode == "NFAe"){
 	      automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
-	      nfae_automatons.push(automaton)
-	      sessionStorage.setItem('nfae',JSON.stringify({array: nfae_automatons}))
+	      nfae_automatons.push({
+	      	name: automaton.name,
+	      	alphabet: Array.from(automaton.alphabet),
+	      	dataset: automaton.toDataSet()
+	      })
+	      localStorage.setItem('nfae',JSON.stringify({array: nfae_automatons}))
 	    }else if (mode == "regex") {
 	    	regex_automatons.push({regex: getInputRegex(), name: getInputName()})
+	    	localStorage.setItem('regex',JSON.stringify({array: regex_automatons}))
 	    }
 
 	    updateList(mode)
@@ -87,7 +94,7 @@ function generateItems(data,mode){
 	let index = 0
 	for(let d of data){
 		html += `<a href='#' class='list-group-item' onclick='loadAutomaton(${index},"${mode}")'>
-					<h4 class='list-group-item-heading'>${(mode=="regex")?'regex':'automaton'}  ${index} - ${d.name}</h4>
+					<p class='list-group-item-heading'>${(mode=="regex")?'regex':'automaton'}  ${index} - ${d.name}</p>
 				</a>`;
 		index += 1
 	}
@@ -97,30 +104,24 @@ function generateItems(data,mode){
 function loadAutomaton(id,mode){
 	let example = undefined
 	if (mode=="DFA"){
-		example = dfa_automatons[id]
+		let dataObj = dfa_automatons[id]
+		example = AutomatonJS.NewDFA(dataObj.dataset,dataObj.name,dataObj.alphabet)
 	}
-	else if (mode=="NFA")
+	else if (mode=="NFA"){
 		example = nfa_automatons[id]
-	else if (mode=="NFAe")
+		example = AutomatonJS.NewNFA(example.dataset,example.name,example.alphabet)
+	}
+	else if (mode=="NFAe"){
 		example = nfae_automatons[id]
-	else if (mode=="regex")
+		example = AutomatonJS.NewNFAe(example.dataset,example.name,example.alphabet)
+	}
+	else if (mode=="regex"){
 		showRegexInfo(regex_automatons[id])
+	}
 	if (mode!="regex") {
-		dataSet = example.toDataSet()
-		network.setData(dataSet)
-		showAutomatonInfo(example.name,example.alphabet)
+		setAutomaton(example)
 	}
 	currentAutomaton = example
-}
-
-function showAutomatonInfo(name,alphabetSet){
-	document.getElementById('automaton-alphabet').value = Array.from(alphabetSet).join(",")
-	document.getElementById('automaton-name').value = name
-}
-
-function showRegexInfo(data){
-	document.getElementById('automaton-name').value = data.name
-	document.getElementById('regex-automaton').value = data.regex
 }
 
 $('#save-dfa').on('click',e => {

@@ -4,6 +4,7 @@ body, select {
 #mynetwork {
   position:relative;
   width: auto;
+  min-height: 400px;
   height: 400px;
   border: 1px solid lightgray;
 }
@@ -24,7 +25,9 @@ body, select {
   font-size:28px;
 }
 
-.vis-manipulation{
-  position: relative;
-  top: -25px;
+@media screen and (min-width: 901px) {
+    #mynetwork {
+      min-height: 540px;
+      height: 540px;
+    }
 }

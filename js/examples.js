@@ -35,6 +35,33 @@ comienzaEnCero.addState('q1',false,true)
 comienzaEnCero.addTransition('0','q0','q1')
 comienzaEnCero.addTransition('0/1','q1','q1')
 
+const toMinimize = new DFA("to minimize",['0','1'])
+toMinimize.addState('A',true)
+toMinimize.addState('B')
+toMinimize.addState('C',false,true)
+toMinimize.addState('D')
+toMinimize.addState('E')
+toMinimize.addState('F')
+toMinimize.addState('G')
+toMinimize.addState('H')
+
+toMinimize.addTransition('0','A','B')
+toMinimize.addTransition('1','A','F')
+toMinimize.addTransition('0','B','G')
+toMinimize.addTransition('1','B','C')
+toMinimize.addTransition('0','C','A')
+toMinimize.addTransition('1','C','C')
+toMinimize.addTransition('0','D','C')
+toMinimize.addTransition('1','D','G')
+toMinimize.addTransition('0','E','H')
+toMinimize.addTransition('1','E','F')
+toMinimize.addTransition('0','F','C')
+toMinimize.addTransition('1','F','G')
+toMinimize.addTransition('0','G','G')
+toMinimize.addTransition('1','G','E')
+toMinimize.addTransition('0','H','G')
+toMinimize.addTransition('1','H','C')
+
 const automNFA = new NFA("nfa-termina en 01", ['0','1'])
 const automNFA_str1 = "01001010110"
 
@@ -124,15 +151,30 @@ const regex2 = {regex: "(0.(0)*)+(1)", name: "muchos ceros o un uno"}
 const regex3 = {regex: "(0+1)*.1.(0+1).(0+1)", name: "antepenultino 1"}
 
 exports.getDFA = function getDFA(){
-	return [automDFA,automDFA2,comienzaEnCero]
+	let listToLoad = [automDFA,automDFA2,comienzaEnCero,toMinimize]
+	listToLoad = listToLoad.map(x => {
+		return {name: x.name,
+				alphabet: Array.from(x.alphabet),
+				dataset: x.toDataSet()}})
+	return listToLoad
 }
 
 exports.getNFA = function getNFA(){
-	return [automNFA,automNFA2]
+	let listToLoad = [automNFA,automNFA2]
+	listToLoad = listToLoad.map(x => {
+		return {name: x.name,
+				alphabet: Array.from(x.alphabet),
+				dataset: x.toDataSet()}})
+	return listToLoad
 }
 
 exports.getNFAe = function getNFAe(){
-	return [automNFAe,automNFAe_dfa,automNFAe_dfa2,termina_01_010]
+	let listToLoad = [automNFAe,automNFAe_dfa,automNFAe_dfa2,termina_01_010]
+	listToLoad = listToLoad.map(x => {
+		return {name: x.name,
+				alphabet: Array.from(x.alphabet),
+				dataset: x.toDataSet()}})
+	return listToLoad
 }
 
 exports.getRegex = function getRegex(){

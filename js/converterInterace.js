@@ -49,6 +49,32 @@ function convertNFAeToDFA(event){
   convertToDFA(event,"NFAe")
 }
 
+function minimizeDFA(event){
+  let alphabet = getInputAlphabet()
+  let name = getInputName()
+
+  try {
+    let automaton = AutomatonJS.NewDFA(network.body.data,name,alphabet)
+    currentAutomaton = automaton.minimize()
+    setAutomaton(currentAutomaton)
+
+    document.getElementById('show-message').innerHTML = `
+      <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Minimized!</strong> from ${automaton.states.length} states, to ${currentAutomaton.states.length} states.
+      </div>
+    `
+  }
+  catch(err) {
+      document.getElementById("show-message").innerHTML = `
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Invalid!</strong> 
+        ${showMessageError(err)}
+      </div>`;
+  }
+}
+
 function convertToDFA(event,mode){
   let alphabet = getInputAlphabet()
   let name = getInputName()
@@ -60,9 +86,7 @@ function convertToDFA(event,mode){
     automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
 
   currentAutomaton = automaton.toDFA()
-  dataSet = currentAutomaton.toDataSet()
-  network.setData(dataSet)
-  showAutomatonInfo(automaton.name,automaton.alphabet)
+  setAutomaton(currentAutomaton)
 }
 
 function convertRegexToNFAE(event){
@@ -70,9 +94,7 @@ function convertRegexToNFAE(event){
 	try{
 		let automatonData = AutomatonJS.regexToNFAe(regex)
 		currentAutomaton = automatonData.nfae
-		dataSet = currentAutomaton.toDataSet()
-		network.setData(dataSet)
-		showAutomatonInfo(currentAutomaton.name,currentAutomaton.alphabet)
+    setAutomaton(currentAutomaton)
 		stepByStep = [automatonData.stepByStep]
 
 		document.getElementById('show-message').innerHTML = `
@@ -169,6 +191,10 @@ $('#convert-nfae-dfa').on('click', e => {
 
 $('#convert-dfa-re').on('click', e => {
   convertDFAToRE(e)
+})
+
+$('#minimize-dfa').on('click', e => {
+  minimizeDFA(e)
 })
 
 $('#convert-regex-nfae').on('click', e => {
