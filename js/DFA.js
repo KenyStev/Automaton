@@ -307,7 +307,7 @@ export default class DFA extends Automaton{
 					let equivalent = undefined
 					let tranSymbols = trans.label.split(/,|\//)
 					for(let ts of tranSymbols){
-						equivalent = newStates.find(x => (x.label.indexOf(trans.to)>=0))
+						equivalent = newStates.find(x => x.label == generateLabelNewState(newStatesIndividualSet,trans.to))
 						let nt = undefined
 						if(equivalent){
 							nt = {
@@ -338,14 +338,24 @@ export default class DFA extends Automaton{
 
 		for(let state of this.states){
 			// E.find(x => (x.Q1.label == state.label) || (x.Q2.label == state.label))
-			if(!newStates.find(x => (x.label.indexOf(state.label)>=0) || (state.label.indexOf(x.label)>=0))){
+			console.log("single state to add: %o",state)
+			// let found = newStates.find(x => {
+			// 	let individualStates = x.label.split(/\}\{|/)
+			// 	for(let is of individualStates)
+			// 	{
+			// 		if (is == state.label) return true
+			// 	}
+			// 	return false
+			// })
+			let found = generateLabelNewState(newStatesIndividualSet,state.label)
+			if(!found){
 				automatonMin.addState(state.label,state.isInitial,state.isFinal)
 				state.transitions.forEach(trans => {
 					// let stateTo = this.findState(trans.to)
 					let tranSymbols = trans.label.split(/,|\//)
 					let equivalent = undefined
 					for(let ts of tranSymbols){
-						equivalent = newStates.find(x => (x.label.indexOf(trans.to)>=0) || (trans.to.indexOf(x.label)>=0))
+						equivalent = newStates.find(x => x.label == generateLabelNewState(newStatesIndividualSet,trans.to))
 						let nt = undefined
 						if (equivalent){
 							nt = {
@@ -367,6 +377,9 @@ export default class DFA extends Automaton{
 							newTransitions.add(nt)
 					}
 				})
+			}else{
+				console.log("no added: %o",state)
+				console.log("found: %o",found)
 			}
 		}
 
@@ -397,4 +410,15 @@ function normalizeLabel (trans) {
 	if (setOfChars.length>1) {setOfChars = '('+setOfChars.join('+')+')'}
 	else setOfChars = setOfChars[0]
 	return setOfChars
+}
+
+function generateLabelNewState(newStatesIndividualSet,stateLabel){
+	for(let newStatesIndividual of newStatesIndividualSet){
+		for(let ns of newStatesIndividual){
+			if (ns == stateLabel) {
+				return '{'+Array.from(newStatesIndividual).sort().join('|')+'}'
+			}
+		}
+	}
+	return null
 }
