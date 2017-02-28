@@ -139,9 +139,7 @@ function convertRegexToNFAE(event){
 }
 
 function teLaCreisteWey(){
-  alert("Te la creiste wey! ha-ha")
-  document.getElementById("show-stepByStep").style.display = 'none'
-  // showStepByStep(stepByStep)
+  document.getElementById('telakreiste-modal').style.display = 'block'
 }
 
 function showStepByStep(sbs) {
@@ -221,4 +219,10 @@ $('#minimize-dfa').on('click', e => {
 
 $('#convert-regex-nfae').on('click', e => {
   convertRegexToNFAE(e)
+})
+
+$('#confirm-stepByStep').on('click', e => {
+  document.getElementById("show-stepByStep").style.display = 'none'
+  document.getElementById('telakreiste-modal').style.display = 'none'
+  showStepByStep(stepByStep)
 })
