@@ -269,32 +269,33 @@ export default class DFA extends Automaton{
 			let newStateLabel = '{'+Array.from(newStatesIndividual).sort().join('|')+'}'
 			for(let ns of newStatesIndividual){
 				let state = this.findState(ns)
-				state.transitions.forEach(trans => {
-					let equivalent = undefined
-					let tranSymbols = trans.label.split(/,|\//)
-					for(let ts of tranSymbols){
-						equivalent = newStates.find(x => x.label == generateLabelNewState(newStatesIndividualSet,trans.to))
-						let nt = undefined
-						if(equivalent){
-							nt = {
-								label:ts,
-								from:newStateLabel,
-								to:equivalent.label
-							}
-						}
-						else{
-							nt = {
-								label:ts,
-								from:newStateLabel,
-								to:trans.to
-							}
-						}
-						if(nt && !Array.from(newTransitions).find(x => (x.label.indexOf(nt.label)>=0
-							|| nt.label.indexOf(x.label)>=0) 
-							&& x.from == nt.from))
-							newTransitions.add(nt)
-					}
-				})
+				state.transitions.forEach(trans => addNewTransition(newTransitions,newStatesIndividualSet ,newStates,trans,newStateLabel))
+				// {
+				// 	let equivalent = undefined
+				// 	let tranSymbols = trans.label.split(/,|\//)
+				// 	for(let ts of tranSymbols){
+				// 		equivalent = newStates.find(x => x.label == generateLabelNewState(newStatesIndividualSet,trans.to))
+				// 		let nt = undefined
+				// 		if(equivalent){
+				// 			nt = {
+				// 				label:ts,
+				// 				from:newStateLabel,
+				// 				to:equivalent.label
+				// 			}
+				// 		}
+				// 		else{
+				// 			nt = {
+				// 				label:ts,
+				// 				from:newStateLabel,
+				// 				to:trans.to
+				// 			}
+				// 		}
+				// 		if(nt && !Array.from(newTransitions).find(x => (x.label.indexOf(nt.label)>=0
+				// 			|| nt.label.indexOf(x.label)>=0) 
+				// 			&& x.from == nt.from))
+				// 			newTransitions.add(nt)
+				// 	}
+				// })
 			}
 		}
 
@@ -306,32 +307,33 @@ export default class DFA extends Automaton{
 			let found = generateLabelNewState(newStatesIndividualSet,state.label)
 			if(!found){
 				automatonMin.addState(state.label,state.isInitial,state.isFinal)
-				state.transitions.forEach(trans => {
-					let tranSymbols = trans.label.split(/,|\//)
-					let equivalent = undefined
-					for(let ts of tranSymbols){
-						equivalent = newStates.find(x => x.label == generateLabelNewState(newStatesIndividualSet,trans.to))
-						let nt = undefined
-						if (equivalent){
-							nt = {
-								label:ts,
-								from: trans.from,
-								to: equivalent.label
-							}
-						}
-						else{
-							nt = {
-								label:ts,
-								from: trans.from,
-								to: trans.to
-							}
-						}
-						if(nt && !Array.from(newTransitions).find(x => (x.label.indexOf(nt.label)>=0 
-							|| nt.label.indexOf(x.label)>=0) 
-							&& x.from == nt.from))
-							newTransitions.add(nt)
-					}
-				})
+				state.transitions.forEach(trans => addNewTransition(newTransitions,newStatesIndividualSet ,newStates,trans,trans.from))
+				// {
+				// 	let tranSymbols = trans.label.split(/,|\//)
+				// 	let equivalent = undefined
+				// 	for(let ts of tranSymbols){
+				// 		equivalent = newStates.find(x => x.label == generateLabelNewState(newStatesIndividualSet,trans.to))
+				// 		let nt = undefined
+				// 		if (equivalent){
+				// 			nt = {
+				// 				label:ts,
+				// 				from: trans.from,
+				// 				to: equivalent.label
+				// 			}
+				// 		}
+				// 		else{
+				// 			nt = {
+				// 				label:ts,
+				// 				from: trans.from,
+				// 				to: trans.to
+				// 			}
+				// 		}
+				// 		if(nt && !Array.from(newTransitions).find(x => (x.label.indexOf(nt.label)>=0 
+				// 			|| nt.label.indexOf(x.label)>=0) 
+				// 			&& x.from == nt.from))
+				// 			newTransitions.add(nt)
+				// 	}
+				// })
 			}
 		}
 
@@ -373,4 +375,31 @@ function generateLabelNewState(newStatesIndividualSet,stateLabel){
 		}
 	}
 	return null
+}
+
+function addNewTransition (newTransitions,newStatesIndividualSet ,newStates,trans,fromLabel) {
+	let tranSymbols = trans.label.split(/,|\//)
+	let equivalent = undefined
+	for(let ts of tranSymbols){
+		equivalent = newStates.find(x => x.label == generateLabelNewState(newStatesIndividualSet,trans.to))
+		let nt = undefined
+		if (equivalent){
+			nt = {
+				label:ts,
+				from: fromLabel,
+				to: equivalent.label
+			}
+		}
+		else{
+			nt = {
+				label:ts,
+				from: fromLabel,
+				to: trans.to
+			}
+		}
+		if(nt && !Array.from(newTransitions).find(x => (x.label.indexOf(nt.label)>=0 
+			|| nt.label.indexOf(x.label)>=0) 
+			&& x.from == nt.from))
+			newTransitions.add(nt)
+	}
 }
