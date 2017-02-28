@@ -270,32 +270,6 @@ export default class DFA extends Automaton{
 			for(let ns of newStatesIndividual){
 				let state = this.findState(ns)
 				state.transitions.forEach(trans => addNewTransition(newTransitions,newStatesIndividualSet ,newStates,trans,newStateLabel))
-				// {
-				// 	let equivalent = undefined
-				// 	let tranSymbols = trans.label.split(/,|\//)
-				// 	for(let ts of tranSymbols){
-				// 		equivalent = newStates.find(x => x.label == generateLabelNewState(newStatesIndividualSet,trans.to))
-				// 		let nt = undefined
-				// 		if(equivalent){
-				// 			nt = {
-				// 				label:ts,
-				// 				from:newStateLabel,
-				// 				to:equivalent.label
-				// 			}
-				// 		}
-				// 		else{
-				// 			nt = {
-				// 				label:ts,
-				// 				from:newStateLabel,
-				// 				to:trans.to
-				// 			}
-				// 		}
-				// 		if(nt && !Array.from(newTransitions).find(x => (x.label.indexOf(nt.label)>=0
-				// 			|| nt.label.indexOf(x.label)>=0) 
-				// 			&& x.from == nt.from))
-				// 			newTransitions.add(nt)
-				// 	}
-				// })
 			}
 		}
 
@@ -308,32 +282,6 @@ export default class DFA extends Automaton{
 			if(!found){
 				automatonMin.addState(state.label,state.isInitial,state.isFinal)
 				state.transitions.forEach(trans => addNewTransition(newTransitions,newStatesIndividualSet ,newStates,trans,trans.from))
-				// {
-				// 	let tranSymbols = trans.label.split(/,|\//)
-				// 	let equivalent = undefined
-				// 	for(let ts of tranSymbols){
-				// 		equivalent = newStates.find(x => x.label == generateLabelNewState(newStatesIndividualSet,trans.to))
-				// 		let nt = undefined
-				// 		if (equivalent){
-				// 			nt = {
-				// 				label:ts,
-				// 				from: trans.from,
-				// 				to: equivalent.label
-				// 			}
-				// 		}
-				// 		else{
-				// 			nt = {
-				// 				label:ts,
-				// 				from: trans.from,
-				// 				to: trans.to
-				// 			}
-				// 		}
-				// 		if(nt && !Array.from(newTransitions).find(x => (x.label.indexOf(nt.label)>=0 
-				// 			|| nt.label.indexOf(x.label)>=0) 
-				// 			&& x.from == nt.from))
-				// 			newTransitions.add(nt)
-				// 	}
-				// })
 			}
 		}
 
