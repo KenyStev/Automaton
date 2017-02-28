@@ -109,6 +109,10 @@ export default class NFAe extends Automaton{
 
 		return newDFA
 	}
+
+	toExampleLines(){
+		this.toExampleLinesFather('newNFAEautomaton','NFAe')
+	}
 }
 
 function normalizeState(state){

@@ -78,21 +78,26 @@ for(let gen of generators){
 			}
 		}
 		let processed = processOperation(getOperation(),selected_0,selected_1)
-		network.setData(processed.toDataSet())
+		setAutomaton(processed)
 		hideModals(gen)
 	})
 }
 
 function processOperation(operation,index0,index1){
+	let dfa0 = dfa_automatons[index0]
+	let dfa1 = dfa_automatons[index1]
+	dfa0 = AutomatonJS.NewDFA(dfa0.dataset,dfa0.name,dfa0.alphabet)
+	dfa1 = (operation!='Complement')?AutomatonJS.NewDFA(dfa1.dataset,dfa1.name,dfa1.alphabet):null
+
 	let processed = undefined
 	if (operation=='Complement') {
-		processed = AutomatonJS.complementAutomaton(dfa_automatons[index0])
+		processed = AutomatonJS.complementAutomaton(dfa0)
 	}else if (operation=='Union'){
-		processed = AutomatonJS.unionAutomaton(dfa_automatons[index0],dfa_automatons[index1])
+		processed = AutomatonJS.unionAutomaton(dfa0,dfa1)
 	}else if (operation=='Intersection'){
-		processed = AutomatonJS.intersectionAutomaton(dfa_automatons[index0],dfa_automatons[index1])
+		processed = AutomatonJS.intersectionAutomaton(dfa0,dfa1)
 	}else if (operation=='Difference'){
-		processed = AutomatonJS.differenceAutomaton(dfa_automatons[index0],dfa_automatons[index1])
+		processed = AutomatonJS.differenceAutomaton(dfa0,dfa1)
 	}
 	return processed
 }

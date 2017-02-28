@@ -49,6 +49,28 @@ function convertNFAeToDFA(event){
   convertToDFA(event,"NFAe")
 }
 
+//borrar Despues
+function getAutomatonWithSink(automaton){
+  automaton.addState('sink',false,true)
+  for(let state of automaton.states)
+  {
+    for(let a of automaton.alphabet)
+    {
+      if (state.label!='sink' && !state.hasTransition(a))
+        automaton.addTransition(a,state.label,'sink')
+    }
+  }
+  return automaton
+}
+
+function deleteSink(automaton){
+  let dataset = automaton.toDataSet()
+  let nodes = dataset.nodes.filter(x => x.label == 'sink')
+  let edges = dataset.edges.filter(x => (x.from == 'sink' || x.to == 'sink'))
+  return AutomatonJS.NewDFA({nodes: nodes, edges: edges},dataset.name,dataset.alphabet)
+}
+//borrar Despues
+
 function minimizeDFA(event){
   let alphabet = getInputAlphabet()
   let name = getInputName()
