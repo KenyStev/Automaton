@@ -82,8 +82,6 @@ export default class DFA extends Automaton{
 			let a = as[as.length-1]
 			regex.push('('+a.getRegex()+')')
 		}
-		// console.log("regex")
-		// console.log(regex.join('+'))
 		return {regex: regex.join('+'), stepByStep: automatons}
 	}
 
@@ -100,7 +98,6 @@ export default class DFA extends Automaton{
 			SetOfStepByStep.push(this.regexFor(automaton))
 		}
 
-		// console.log(SetOfStepByStep)
 		return SetOfStepByStep
 	}
 
@@ -170,8 +167,6 @@ export default class DFA extends Automaton{
 					this.DFS(col,row,visitados,equivalentes,Noequivalentes)
 			}
 		}
-		console.log("equivalentes")
-		console.log(JSON.stringify(equivalentes))
 		let minimized = this.mergeEquivalents(equivalentes)
 		if (minimized.states.length == this.states.length) 
 			throw new AlreadyMinimizedError(this.name)
@@ -179,23 +174,14 @@ export default class DFA extends Automaton{
 	}
 
 	DFS(Q,P,V,E,NE){
-		// if(contter>500) {console.log("recursion infinita"); return}
-		// else contter++
-
 		if (this.areEquivalents(Q,P,V,E,NE)) return
 		NE.push([Q.label,P.label].sort().join(','))
-		
-		// if (EQ && Q.isFinal == P.isFinal) {
-		// 	console.log("EQ: "+Q.label+' - '+P.label)
-		// 	E.push({Q1: Q, Q2: P})
-		// }
 	}
 
 	areEquivalents(Q,P,V,E,NE){
 		if (Q.isFinal != P.isFinal) return false
 		let stateQ = this.findState(Q.label)
 		let stateP = this.findState(P.label)
-		// if (stateQ.transitions.length != stateP.transitions.length) return false
 
 		let EQ = true
 		let lamdaResults = []
@@ -239,22 +225,9 @@ export default class DFA extends Automaton{
 						return false
 					}
 				}
-				// this.DFS(lr.toQ,lr.toP,V,E)
 			}
-			// if (lr.toQ.isFinal != lr.toP.isFinal) {EQ = false; break}
-			// let visitedTo = V.find(x => (x.Q.label == lr.toQ.label && x.P.label == lr.toP.label) 
-			// 	|| (x.Q.label == lr.toP.label && x.P.label == lr.toQ.label)) != null || false
-			// if (lr.toQ.label != lr.toP.label && lr.toQ.isFinal == lr.toP.isFinal){
-			// 	if (!visitedTo){
-			// 		this.DFS(lr.toQ,lr.toP,V,E)
-			// 		EQ = EQ && this.areEquivalents(lr.toQ,lr.toP,E)
-			// 	}
-			// }
 		}
 		return true
-
-		// return (E.find(x => (x.Q1.label == Q.label && x.Q2.label == P.label) 
-		// 			|| (x.Q1.label == P.label && x.Q2.label == Q.label))) != null || false
 	}
 
 	mergeEquivalents(E){
@@ -269,10 +242,9 @@ export default class DFA extends Automaton{
 			newState.add(e.Q1.label)
 			newState.add(e.Q2.label)
 			let isStillInitial = e.Q1.isInitial || e.Q2.isInitial
-			let alreadyInNewStates = newStates.filter(x => x.label.indexOf(e.Q1.label)>=0 && x.label.indexOf(e.Q2.label)>=0)
+			let alreadyInNewStates = newStates.filter(x => x.label == generateLabelNewState(newStatesIndividualSet,e.Q1.label)
+				|| x.label == generateLabelNewState(newStatesIndividualSet,e.Q2.label))
 			if(alreadyInNewStates.length>0){
-				console.log("continued %e",e)
-				console.log(alreadyInNewStates)
 				continue
 			}
 			let duplicated = this.getDuplicated(E,e)
@@ -289,14 +261,8 @@ export default class DFA extends Automaton{
 				label:newStateLabel,
 				isInitial:isStillInitial,
 				isFinal:e.Q1.isFinal})
-			console.log("e: %o",e)
 
 			E = E.filter(x => x.Q1.label != e.Q1.label && x.Q2.label != e.Q2.label)
-			// i = 0
-			// for(let ns of newState){
-			// 	let index = E.indexOf(x => x.Q1.label == ns || x.Q2.label == ns)
-			// 	E.splice(index,1)
-			// }
 		}
 
 		for(let newStatesIndividual of newStatesIndividualSet){
@@ -337,21 +303,10 @@ export default class DFA extends Automaton{
 		}
 
 		for(let state of this.states){
-			// E.find(x => (x.Q1.label == state.label) || (x.Q2.label == state.label))
-			console.log("single state to add: %o",state)
-			// let found = newStates.find(x => {
-			// 	let individualStates = x.label.split(/\}\{|/)
-			// 	for(let is of individualStates)
-			// 	{
-			// 		if (is == state.label) return true
-			// 	}
-			// 	return false
-			// })
 			let found = generateLabelNewState(newStatesIndividualSet,state.label)
 			if(!found){
 				automatonMin.addState(state.label,state.isInitial,state.isFinal)
 				state.transitions.forEach(trans => {
-					// let stateTo = this.findState(trans.to)
 					let tranSymbols = trans.label.split(/,|\//)
 					let equivalent = undefined
 					for(let ts of tranSymbols){
@@ -377,9 +332,6 @@ export default class DFA extends Automaton{
 							newTransitions.add(nt)
 					}
 				})
-			}else{
-				console.log("no added: %o",state)
-				console.log("found: %o",found)
 			}
 		}
 
