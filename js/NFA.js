@@ -100,6 +100,10 @@ export default class NFA extends Automaton{
 
 		return newDFA
 	}
+
+	toExampleLines(){
+		this.toExampleLinesFather('newNFAautomaton','NFA')
+	}
 }
 
 function normalizeState(state){

@@ -62,6 +62,33 @@ toMinimize.addTransition('1','G','E')
 toMinimize.addTransition('0','H','G')
 toMinimize.addTransition('1','H','C')
 
+const DFAposhitoLoco = new DFA('poshito loco',["a","b","c"])
+DFAposhitoLoco.addState('q0',true,true)
+DFAposhitoLoco.addState('q1',false,true)
+DFAposhitoLoco.addState('q2',false,true)
+DFAposhitoLoco.addState('q3',false,true)
+DFAposhitoLoco.addState('q4',false,true)
+DFAposhitoLoco.addState('q5',false,true)
+DFAposhitoLoco.addState('q6',false,true)
+DFAposhitoLoco.addState('q7',false,true)
+DFAposhitoLoco.addState('q8',false,true)
+DFAposhitoLoco.addState('q9',false,true)
+DFAposhitoLoco.addTransition('a','q0','q1')
+DFAposhitoLoco.addTransition('b','q0','q4')
+DFAposhitoLoco.addTransition('c','q0','q8')
+DFAposhitoLoco.addTransition('a','q1','q2')
+DFAposhitoLoco.addTransition('b','q1','q1')
+DFAposhitoLoco.addTransition('a','q2','q3')
+DFAposhitoLoco.addTransition('b','q2','q2')
+DFAposhitoLoco.addTransition('a','q3','q1')
+DFAposhitoLoco.addTransition('b','q3','q3')
+DFAposhitoLoco.addTransition('a/c','q4','q5')
+DFAposhitoLoco.addTransition('a/c','q5','q6')
+DFAposhitoLoco.addTransition('a/c','q6','q7')
+DFAposhitoLoco.addTransition('a/c','q7','q4')
+DFAposhitoLoco.addTransition('a','q8','q9')
+DFAposhitoLoco.addTransition('b','q9','q8')
+
 const automNFA = new NFA("nfa-termina en 01", ['0','1'])
 const automNFA_str1 = "01001010110"
 
@@ -151,7 +178,7 @@ const regex2 = {regex: "(0.(0)*)+(1)", name: "muchos ceros o un uno"}
 const regex3 = {regex: "(0+1)*.1.(0+1).(0+1)", name: "antepenultino 1"}
 
 exports.getDFA = function getDFA(){
-	let listToLoad = [automDFA,automDFA2,comienzaEnCero,toMinimize]
+	let listToLoad = [automDFA,automDFA2,comienzaEnCero,toMinimize,DFAposhitoLoco]
 	listToLoad = listToLoad.map(x => {
 		return {name: x.name,
 				alphabet: Array.from(x.alphabet),

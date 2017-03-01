@@ -64,4 +64,8 @@ export default class DFAre extends Automaton{
 			return '('+ RST + (T && U?'.':'') + U+')*.'+ RST
 		}
 	}
+
+	toExampleLines(){
+		this.toExampleLinesFather('newDFAREautomaton','DFAre')
+	}
 }

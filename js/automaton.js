@@ -59,6 +59,16 @@ export default class Automaton {
 		})
 		return {nodes: nodes, edges: edges}
 	}
+
+	toExampleLinesFather(valiableName,constructorName){
+		console.log('const '+valiableName+' = new '+constructorName+'('+"'generated',"+JSON.stringify(Array.from(this.alphabet))+')')
+
+		let dataset = this.toData()
+		for(let state of dataset.nodes)
+			console.log(valiableName+'.addState('+"'"+state.label+"',"+state.isInitial+','+state.isFinal+')')
+		for(let trans of dataset.edges)
+			console.log(valiableName+'.addTransition('+"'"+trans.label+"',"+"'"+trans.from+"'"+','+"'"+trans.to+"'"+')')
+	}
 }
 
 export class State {
@@ -94,10 +104,13 @@ export class Transition {
 	}
 
 	match(a) {
+		let setOfa = a.split(/,|\//)
 		for(let e of this.label.split(/,|\//))
 		{
-			if (e == a) 
-				return true
+			for(let c of setOfa)
+			{
+				if (c == e) return true
+			}
 		}
 		return false
 	}

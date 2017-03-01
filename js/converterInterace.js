@@ -49,6 +49,28 @@ function convertNFAeToDFA(event){
   convertToDFA(event,"NFAe")
 }
 
+//borrar Despues
+function getAutomatonWithSink(automaton){
+  automaton.addState('sink',false,true)
+  for(let state of automaton.states)
+  {
+    for(let a of automaton.alphabet)
+    {
+      if (state.label!='sink' && !state.hasTransition(a))
+        automaton.addTransition(a,state.label,'sink')
+    }
+  }
+  return automaton
+}
+
+function deleteSink(automaton){
+  let dataset = automaton.toDataSet()
+  let nodes = dataset.nodes.filter(x => x.label == 'sink')
+  let edges = dataset.edges.filter(x => (x.from == 'sink' || x.to == 'sink'))
+  return AutomatonJS.NewDFA({nodes: nodes, edges: edges},dataset.name,dataset.alphabet)
+}
+//borrar Despues
+
 function minimizeDFA(event){
   let alphabet = getInputAlphabet()
   let name = getInputName()
@@ -117,9 +139,7 @@ function convertRegexToNFAE(event){
 }
 
 function teLaCreisteWey(){
-  alert("Te la creiste wey! ha-ha")
-  document.getElementById("show-stepByStep").style.display = 'none'
-  // showStepByStep(stepByStep)
+  document.getElementById('telakreiste-modal').style.display = 'block'
 }
 
 function showStepByStep(sbs) {
@@ -199,4 +219,10 @@ $('#minimize-dfa').on('click', e => {
 
 $('#convert-regex-nfae').on('click', e => {
   convertRegexToNFAE(e)
+})
+
+$('#confirm-stepByStep').on('click', e => {
+  document.getElementById("show-stepByStep").style.display = 'none'
+  document.getElementById('telakreiste-modal').style.display = 'none'
+  showStepByStep(stepByStep)
 })
