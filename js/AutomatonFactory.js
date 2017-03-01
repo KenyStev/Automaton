@@ -108,7 +108,7 @@ export function complementAutomaton(dfa){
 
 //operaciones con automatas
 function getStateLabel(state0,state1){
-	return state0.label+'/a,'+state1.label+'/b'
+	return [state0.label+'/a',state1.label+'/b'].sort().join(',')
 }
 
 function getStateForSymbol(state,dfa0,dfa1,a){
@@ -126,7 +126,9 @@ function getStateForSymbol(state,dfa0,dfa1,a){
 		if (fromState) {toState = fromState.transitions.find(x => x.match(a))}
 		if (toState) {states.push(toState.to+'/'+fromIdentifier[1])}
 	}
-	return states.sort().join(',')
+	if (states.length>0)
+		return states.sort().join(',')
+	return null
 }
 
 function fuseAutomatons(name,dfa0,dfa1){
@@ -141,10 +143,12 @@ function fuseAutomatons(name,dfa0,dfa1){
 	for(let state of fusedAutomaton.states){
 		for(let a of Array.from(newAlphabet)){
 			let newState = getStateForSymbol(state,dfa0,dfa1,a)
-			if (!fusedAutomaton.states.find(x => x.label==newState)) {
+			if (newState && !fusedAutomaton.states.find(x => x.label==newState)) {
 				fusedAutomaton.addState(newState)
 			}
-			fusedAutomaton.addTransition(a,state.label,newState)
+			if (newState){
+				fusedAutomaton.addTransition(a,state.label,newState)
+			}
 		}
 	}
 
