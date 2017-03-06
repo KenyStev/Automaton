@@ -4,7 +4,8 @@ import { UnknownCharError,
 		DeterminismError, 
 		StateAlreadyExistError,
 		NextTransitionError,
-		AlreadyMinimizedError
+		AlreadyMinimizedError,
+		NotValidWordError
 } from "./errors"
 
 const epsilon = "epsilon"
@@ -39,10 +40,10 @@ export default class PDA extends Automaton{
 
 	clausura(state,top){
 		let states = []
-		states.push(state)
-		state.transitions.filter(x => x.ableToPop(epsilon,top)).map(f => {
+		states.push({epsilonState: state, pushPop: 'epsilon,epsilon/epsilon'})
+		state.transitions.filter(x => x.ableToPop(epsilon,top) || x.ableToPop(epsilon,epsilon)).map(f => {
 			let epsilonState = this.findState(f.to)
-			states.push(epsilonState)
+			states.push({epsilonState: epsilonState, pushPop: f.label})
 			states = states.concat(states,this.clausura(epsilonState))
 		})
 
@@ -52,7 +53,9 @@ export default class PDA extends Automaton{
 	match(w){
 		let stack = []
 		stack.push('Z0')
-		return this.matchStates(w,[this.getInitialState()],stack)
+		let finalStates = this.matchStates(w,[this.getInitialState()],stack).filter(z => z!=undefined)
+		if (finalStates.length==0) throw new NotValidWordError(w)
+		return finalStates
 	}
 
 	matchStates(w,currentStates,stack){
@@ -71,25 +74,34 @@ export default class PDA extends Automaton{
 			let returnValues = []
 
 			clausuras.forEach(claus => {
-				let transitions = claus.transitions.filter(x => x.ableToPop(a,stack[stack.length-1]))
+				let nextStack = Array.from(stack)
+				let popEpsilonValue = claus.pushPop.split('/')[0].split(',')[1]
+				let pushEpsilonValues = claus.pushPop.split('/')[1].split(',')
+
+				if (popEpsilonValue!=epsilon) nextStack.pop()
+				for (var i = pushEpsilonValues.length - 1; i >= 0; i--) {
+					if (pushEpsilonValues[i]!=epsilon)
+						nextStack.push(pushEpsilonValues[i])
+				}
+				let transitions = claus.epsilonState.transitions.filter(x => x.ableToPop(a,stack[stack.length-1]) || x.ableToPop(a,epsilon))
 				transitions.forEach(t => {
 					// statesTo.add(this.findState(t.to))
 					let popValue = t.label.split('/')[0].split(',')[1]
 					let pushValues = t.label.split('/')[1].split(',')
-					let nextStack = Array.from(stack)
 					if (popValue!=epsilon) nextStack.pop()
 					for (var i = pushValues.length - 1; i >= 0; i--) {
 						if (pushValues[i]!=epsilon)
 							nextStack.push(pushValues[i])
-					};
+					}
 					returnValues = returnValues.concat(returnValues,this.matchStates(w.substring(1,w.length),[this.findState(t.to)],nextStack))
 				})
 			})
-			return returnValues
+			if (returnValues.length>0)
+				return Array.from(new Set(returnValues))
 			// if (statesTo.size==0)
 			// 	throw new NextTransitionError(a)
 			// return this.matchStates(w.substring(1,w.length),Array.from(statesTo),new Array(stack))
 		}
-		return clausuras.filter(x => x.isFinal)[0]
+		return (clausuras.map(y => y.epsilonState)).find(x => x.isFinal)
 	}
 }

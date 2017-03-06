@@ -191,7 +191,16 @@ PDA_palindromo_par.addTransition('epsilon,Z0/Z0','q0','q1')
 PDA_palindromo_par.addTransition('1,X/epsilon','q1','q1')
 PDA_palindromo_par.addTransition('epsilon,Z0/Z0','q1','q2')
 
-console.log("result: ",PDA_palindromo_par.match("000111"))
+const parentesis = new PDA("consume parentesis",['(',')'])
+parentesis.addState('q0',true,true)
+parentesis.addState('q1')
+parentesis.addTransition('epsilon,epsilon/$','q0','q1')
+parentesis.addTransition('epsilon,$/epsilon','q1','q0')
+parentesis.addTransition('(,epsilon/*','q1','q1')
+parentesis.addTransition('),*/epsilon','q1','q1')
+
+console.log("result: ",PDA_palindromo_par.match("00001111"))
+console.log("result: ",PDA_palindromo_par.match("0000111"))
 
 exports.getDFA = function getDFA(){
 	let listToLoad = [automDFA,automDFA2,comienzaEnCero,toMinimize,DFAposhitoLoco]
@@ -225,7 +234,7 @@ exports.getRegex = function getRegex(){
 }
 
 exports.getPDA = function getPDA(){
-	let listToLoad = [PDA_palindromo_par]
+	let listToLoad = [PDA_palindromo_par,parentesis]
 	listToLoad = listToLoad.map(x => {
 		return {name: x.name,
 				alphabet: Array.from(x.alphabet),
