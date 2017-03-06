@@ -53,9 +53,12 @@ export default class PDA extends Automaton{
 	match(w){
 		let stack = []
 		stack.push('Z0')
-		let finalStates = this.matchStates(w,[this.getInitialState()],stack).filter(z => z!=undefined)
+		let finalStates = this.matchStates(w,[this.getInitialState()],stack)
 		if (finalStates.length==0) throw new NotValidWordError(w)
-		return finalStates[0]
+		console.log("finalStates: %o", finalStates)
+		let finalState = finalStates.find(x => x!=undefined && x.isFinal)
+		if (!finalState) throw new NotValidWordError(w)
+		return finalState
 	}
 
 	matchStates(w,currentStates,stack){
@@ -96,7 +99,7 @@ export default class PDA extends Automaton{
 					returnValues = returnValues.concat(returnValues,this.matchStates(w.substring(1,w.length),[this.findState(t.to)],nextStack))
 				})
 			})
-			if (returnValues.length>0)
+			// if (returnValues.length>0)
 				return Array.from(new Set(returnValues))
 			// if (statesTo.size==0)
 			// 	throw new NextTransitionError(a)
