@@ -1,6 +1,7 @@
 import DFA from "./DFA.js"
 import NFA from "./NFA.js"
 import NFAe from "./NFA-e.js"
+import PDA from "./PDA.js"
 
 const automDFA = new DFA("dfa-tres ceros seguidos", ['0','1'])
 const automDFA_str1 = "0100101011"
@@ -177,6 +178,21 @@ const regex1 = {regex: "(1+0.(0)*.1)*", name: "termina en 1"}
 const regex2 = {regex: "(0.(0)*)+(1)", name: "muchos ceros o un uno"}
 const regex3 = {regex: "(0+1)*.1.(0+1).(0+1)", name: "antepenultino 1"}
 
+//PDA
+const PDA_palindromo_par = new PDA("0^n 1^n",['0','1'])
+PDA_palindromo_par.addState('q0',true)
+PDA_palindromo_par.addState('q1')
+PDA_palindromo_par.addState('q2',false,true)
+
+PDA_palindromo_par.addTransition('0,Z0/X,Z0','q0','q0')
+PDA_palindromo_par.addTransition('0,X/X,X','q0','q0')
+PDA_palindromo_par.addTransition('1,X/epsilon','q0','q1')
+PDA_palindromo_par.addTransition('epsilon,Z0/Z0','q0','q1')
+PDA_palindromo_par.addTransition('1,X/epsilon','q1','q1')
+PDA_palindromo_par.addTransition('epsilon,Z0/Z0','q1','q2')
+
+console.log("result: ",PDA_palindromo_par.match("000111"))
+
 exports.getDFA = function getDFA(){
 	let listToLoad = [automDFA,automDFA2,comienzaEnCero,toMinimize,DFAposhitoLoco]
 	listToLoad = listToLoad.map(x => {
@@ -206,4 +222,13 @@ exports.getNFAe = function getNFAe(){
 
 exports.getRegex = function getRegex(){
 	return [regex1,regex2,regex3]
+}
+
+exports.getPDA = function getPDA(){
+	let listToLoad = [PDA_palindromo_par]
+	listToLoad = listToLoad.map(x => {
+		return {name: x.name,
+				alphabet: Array.from(x.alphabet),
+				dataset: x.toDataSet()}})
+	return listToLoad
 }
