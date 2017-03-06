@@ -30,10 +30,10 @@ function evaluate(event,mode){
       automaton.toRE()
     }else if (mode == "NFA"){
       automaton = AutomatonJS.NewNFA(network.body.data,name,alphabet)
-      finalState = automaton.match(word,automaton.getInitialState())
+      finalState = automaton.match(word)
     }else if (mode == "NFAe"){
       automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
-      finalState = automaton.match(word,[automaton.getInitialState()])
+      finalState = automaton.match(word)
     }else if (mode == "PDA") {
       automaton = AutomatonJS.NewPDA(network.body.data,name,alphabet)
       finalState = automaton.match(word)
