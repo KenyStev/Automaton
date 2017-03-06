@@ -5,6 +5,7 @@ import {
 	NewDFA
 , 	NewNFA
 ,	NewNFAe
+,	NewPDA
 ,	regexToNFAe
 ,	regexToNFAe_STEPS
 ,	unionAutomaton
@@ -19,6 +20,7 @@ exports.examples = examples
 exports.NewDFA = NewDFA;
 exports.NewNFA = NewNFA;
 exports.NewNFAe = NewNFAe;
+exports.NewPDA = NewPDA;
 exports.regexToNFAe = regexToNFAe;
 exports.regexToNFAe_STEPS = regexToNFAe_STEPS;
 exports.unionAutomaton = unionAutomaton;

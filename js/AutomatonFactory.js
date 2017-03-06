@@ -1,6 +1,7 @@
 import DFA from "./DFA"
 import NFA from "./NFA"
 import NFAe from "./NFA-e"
+import PDA from "./PDA"
 import Parser from "./regular-expression-parser/regular-expression"
 
 var seed = 0
@@ -71,6 +72,24 @@ export function NewNFAe(data, name, alphabet) {
 	})
 
 	return NFAeutomaton
+}
+
+export function NewPDA(data, name, alphabet) {
+	const PDAeutomaton = new PDA(name, alphabet)
+	let states = objectToArray(('_data' in data.nodes)?data.nodes._data:data.nodes)
+	states.forEach(state => {
+		PDAeutomaton.addState(state.label,
+			state.nodeId.toString().indexOf("start")!==-1,
+			state.nodeId.toString().indexOf("end")!==-1)
+	})
+
+	let transitions = objectToArray(('_data' in data.edges)?data.edges._data:data.edges)
+	transitions.forEach(transition => {
+		PDAeutomaton.addTransition(transition.label,
+			getState(data,transition.from).label, getState(data,transition.to).label)
+	})
+
+	return PDAeutomaton
 }
 
 export function regexToNFAe(regex){

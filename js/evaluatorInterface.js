@@ -11,6 +11,10 @@ function evaluateNfae(event){
   evaluate(event,"NFAe")
 }
 
+function evaluatePDA(event){
+  evaluate(event,"PDA")
+}
+
 function evaluate(event,mode){
 	let alphabet = document.getElementById('automaton-alphabet').value
 	alphabet = alphabet.split(',')
@@ -30,6 +34,9 @@ function evaluate(event,mode){
     }else if (mode == "NFAe"){
       automaton = AutomatonJS.NewNFAe(network.body.data,name,alphabet)
       finalState = automaton.match(word,[automaton.getInitialState()])
+    }else if (mode == "PDA") {
+      automaton = AutomatonJS.NewPDA(network.body.data,name,alphabet)
+      finalState = automaton.match(word)
     }
 
     currentAutomaton = automaton
@@ -59,4 +66,7 @@ $('#send-automaton-nfa').on('click', e => {
 })
 $('#send-automaton-nfae').on('click', e => {
   evaluateNfae(e)
+})
+$('#send-automaton-pda').on('click', e => {
+  evaluatePDA(e)
 })

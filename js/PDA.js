@@ -55,7 +55,7 @@ export default class PDA extends Automaton{
 		stack.push('Z0')
 		let finalStates = this.matchStates(w,[this.getInitialState()],stack).filter(z => z!=undefined)
 		if (finalStates.length==0) throw new NotValidWordError(w)
-		return finalStates
+		return finalStates[0]
 	}
 
 	matchStates(w,currentStates,stack){
