@@ -167,4 +167,18 @@ function setAutomaton(automaton){
 
 function init() {
   draw()
+  network.on("selectNode", function (params) {
+    console.log('selectNode Event:', params);
+    let alphabet = document.getElementById('automaton-alphabet').value
+    alphabet = alphabet.split(',')
+    let name = document.getElementById('automaton-name').value
+    let PDA_automaton = AutomatonJS.NewPDA(network.body.data,name,alphabet)
+    let state = PDA_automaton.findState(params.nodes[0])
+    console.log("state: %o",state)
+
+    let showTransitions = document.getElementById('show-transitions')
+    let labels = ""
+    state.transitions.forEach(t => labels+="<p>"+t.label+" to: "+t.to+"</p>")
+    showTransitions.innerHTML = labels
+  });
 }
