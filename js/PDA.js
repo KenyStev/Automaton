@@ -9,7 +9,7 @@ import { UnknownCharError,
 } from "./errors"
 
 const epsilon = "epsilon"
-var contter = 0
+// var contter = 0
 
 export default class PDA extends Automaton{
 	constructor(name, alphabet){super(name, alphabet)}
@@ -63,8 +63,6 @@ export default class PDA extends Automaton{
 	}
 
 	matchStates(w,currentStates,stack){
-		// if (contter>10) return []
-		// else contter++
 		console.log("descripcion instantanea: w: %s, currentStates: %o, stack: %o",w,currentStates,stack)
 		let clausuras = []
 		currentStates.forEach(currentState => {
@@ -76,7 +74,6 @@ export default class PDA extends Automaton{
 
 		if (w.length>0) {
 			let a = w.charAt(0)
-			let statesTo = new Set()
 			let returnValues = []
 
 			clausuras.forEach(claus => {
@@ -95,7 +92,6 @@ export default class PDA extends Automaton{
 				console.log("transitions")
 				console.log(transitions)
 				transitions.forEach(t => {
-					// statesTo.add(this.findState(t.to))
 					let popValue = t.label.split('/')[0].split(',')[1]
 					let pushValues = t.label.split('/')[1].split(',')
 					if (popValue!=epsilon) nextStack.pop()
@@ -112,12 +108,122 @@ export default class PDA extends Automaton{
 			})
 			console.log("returnValues")
 			console.log(returnValues)
-			// if (returnValues.length>0)
-				return Array.from(new Set(returnValues))
-			// if (statesTo.size==0)
-			// 	throw new NextTransitionError(a)
-			// return this.matchStates(w.substring(1,w.length),Array.from(statesTo),new Array(stack))
+			return Array.from(new Set(returnValues))
 		}
 		return (clausuras.map(y => y.epsilonState)).find(x => x.isFinal)
 	}
+
+	toGrammar(){
+		let grammar = this.getStepOne()
+		let stepTwo = this.getStepTwo()
+		let stepThree = this.getStepThree()
+
+		let keys = Reflect.ownKeys(stepTwo)
+		keys.forEach(key => {
+			if (key in grammar) {
+				grammar[key] = grammar[key].concat(grammar[key],stepTwo[key])
+			}else{
+				grammar[key] = stepTwo[key]
+			}
+		})
+
+		keys = Reflect.ownKeys(stepThree)
+		keys.forEach(key => {
+			if (key in grammar) {
+				grammar[key] = grammar[key].concat(grammar[key],stepThree[key])
+			}else{
+				grammar[key] = stepThree[key]
+			}
+		})
+		console.log(JSON.stringify(grammar,undefined,2))
+		return grammar
+
+		// console.log(JSON.stringify(grammar,undefined,2))
+		// console.log(JSON.stringify(stepTwo,undefined,2))
+		// console.log(JSON.stringify(stepThree,undefined,2))
+	}
+
+	getStepOne(){
+		let initialState = this.getInitialState()
+		let finalStates = this.states.filter(x => x.isFinal)
+		let produced = []
+
+		finalStates.forEach(state => {
+			console.log('S -> ['+initialState.label+'Z0'+state.label+']')
+			produced.push(['['+initialState.label+'Z0'+state.label+']'])
+		})
+		return {'S':produced}
+	}
+
+	getStepTwo(){
+		let transitions = this.toData().edges
+		let returnValues = {}
+		transitions.forEach(trans => {
+			let values = trans.label.split('/')
+			let leftValues = values[0].split(',')
+			if (values[1]==epsilon) {
+				let production = '['+trans.from+leftValues[1]+trans.to+']'
+				console.log(production+' -> '+leftValues[0])
+				if (!returnValues[production]) returnValues[production] = []
+				returnValues[production].push([leftValues[0]])
+			}
+		})
+		return returnValues
+	}
+
+	getStepThree(){
+		let returnValues = {}
+		let data = this.toData()
+		let transitions = data.edges
+		transitions.forEach(trans => {
+			let values = trans.label.split('/')
+			let leftValues = values[0].split(',')
+			let rightValues = values[1].split(',')
+			let m = rightValues.length
+			if (values[1]!=epsilon){
+				let permutation = getPermutation(data.nodes,m)
+				permutation.forEach(row => {
+					let production = '[' + trans.from + leftValues[1] + row[m-1] + ']'
+					let produce = leftValues[0] + ',['+trans.to+ rightValues[0]+ row[0] +']'
+					for (var i = 1; i < rightValues.length; i++) {
+						produce += ',[' + row[i-1] + rightValues[i] + row[i] + ']'
+					}
+					console.log(production + ' -> '+ produce)
+					if (!returnValues[production]) returnValues[production] = []
+					returnValues[production].push(produce.split(','))
+				})
+			}
+		})
+		return returnValues
+	}
+}
+
+function getPermutation(Q,m) {
+	console.log("Start")
+	let states = Q.map(x => x.label)
+	let permutation = []
+	let rows = Math.pow(states.length,m)
+	
+	for (let i = 0; i < rows; i++) {
+		permutation.push(new Array(m))
+	}
+
+	for (let i = 0; i < m; i++) {
+		// permutation.push(new Array(m))
+		let incidences = Math.pow(states.length, m - (i + 1));
+		let current_state = 0;
+		for (let j = 0; j < rows; j++) {
+			if (j > 0 && j % incidences == 0)
+				current_state++;
+			if (current_state >= states.length)
+				current_state = 0;
+			permutation[j][i] = states[current_state];
+		}
+	}
+
+	for (var row = 0; row < rows; row++) {
+		console.log("r: %d -> %s",row,JSON.stringify(permutation[row]))
+	}
+
+	return permutation
 }

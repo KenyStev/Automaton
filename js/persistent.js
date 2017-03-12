@@ -5,7 +5,7 @@ var regex_automatons = localStorage.getItem('regex')
 var pda_automatons = localStorage.getItem('pda')
 var currentGrammar = {
 	E: [
-		['E','+','T'],
+		['E','+','S'],
 		['S']
 	],
 	S: [
