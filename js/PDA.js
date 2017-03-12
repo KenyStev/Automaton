@@ -9,6 +9,7 @@ import { UnknownCharError,
 } from "./errors"
 
 const epsilon = "epsilon"
+var contter = 0
 
 export default class PDA extends Automaton{
 	constructor(name, alphabet){super(name, alphabet)}
@@ -44,7 +45,7 @@ export default class PDA extends Automaton{
 		state.transitions.filter(x => x.ableToPop(epsilon,top) || x.ableToPop(epsilon,epsilon)).map(f => {
 			let epsilonState = this.findState(f.to)
 			states.push({epsilonState: epsilonState, pushPop: f.label})
-			states = states.concat(states,this.clausura(epsilonState))
+			// states = states.concat(states,this.clausura(epsilonState,top))
 		})
 
 		return Array.from(new Set(states))
@@ -62,6 +63,8 @@ export default class PDA extends Automaton{
 	}
 
 	matchStates(w,currentStates,stack){
+		// if (contter>10) return []
+		// else contter++
 		console.log("descripcion instantanea: w: %s, currentStates: %o, stack: %o",w,currentStates,stack)
 		let clausuras = []
 		currentStates.forEach(currentState => {
@@ -86,7 +89,11 @@ export default class PDA extends Automaton{
 					if (pushEpsilonValues[i]!=epsilon)
 						nextStack.push(pushEpsilonValues[i])
 				}
-				let transitions = claus.epsilonState.transitions.filter(x => x.ableToPop(a,stack[stack.length-1]) || x.ableToPop(a,epsilon))
+				let transitions = claus.epsilonState.transitions.filter(x => x.ableToPop(a,stack[stack.length-1])
+					|| x.ableToPop(a,epsilon)
+					|| x.ableToPop(epsilon,stack[stack.length-1]))
+				console.log("transitions")
+				console.log(transitions)
 				transitions.forEach(t => {
 					// statesTo.add(this.findState(t.to))
 					let popValue = t.label.split('/')[0].split(',')[1]
@@ -96,9 +103,15 @@ export default class PDA extends Automaton{
 						if (pushValues[i]!=epsilon)
 							nextStack.push(pushValues[i])
 					}
-					returnValues = returnValues.concat(returnValues,this.matchStates(w.substring(1,w.length),[this.findState(t.to)],nextStack))
+					console.log("llego aqui")
+					if(t.label.split('/')[0].split(',')[0]!=epsilon)
+						returnValues = returnValues.concat(returnValues,this.matchStates(w.substring(1,w.length),[this.findState(t.to)],nextStack))
+					else
+						returnValues = returnValues.concat(returnValues,this.matchStates(w,[this.findState(t.to)],nextStack))
 				})
 			})
+			console.log("returnValues")
+			console.log(returnValues)
 			// if (returnValues.length>0)
 				return Array.from(new Set(returnValues))
 			// if (statesTo.size==0)

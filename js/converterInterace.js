@@ -138,6 +138,11 @@ function convertRegexToNFAE(event){
 
 }
 
+function convertGrammarToPDA(event){
+  let automaton = AutomatonJS.grammarToPDA(currentGrammar)
+  setAutomaton(automaton)
+}
+
 function teLaCreisteWey(){
   document.getElementById('telakreiste-modal').style.display = 'block'
 }
@@ -219,6 +224,10 @@ $('#minimize-dfa').on('click', e => {
 
 $('#convert-regex-nfae').on('click', e => {
   convertRegexToNFAE(e)
+})
+
+$('#convert-to-pda').on('click', e => {
+  convertGrammarToPDA(e)
 })
 
 $('#confirm-stepByStep').on('click', e => {

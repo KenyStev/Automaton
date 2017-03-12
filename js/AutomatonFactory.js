@@ -125,6 +125,12 @@ export function complementAutomaton(dfa){
 	return lookForSink(complemented)
 }
 
+export function grammarToPDA(grammar){
+	let productions = getProducations(grammar)
+	let terminals = getTerminals(grammar,productions)
+	return generatePDA(grammar,productions,terminals)
+}
+
 //operaciones con automatas
 function getStateLabel(state0,state1){
 	return [state0.label+'/a',state1.label+'/b'].sort().join(',')
@@ -372,6 +378,42 @@ function getNFAEconcat(nfae0,nfae1){
 	nfae.addTransition(epsilon,finalState0.label,initialState1.label)
 
 	return nfae
+}
+
+//Grammar to PDA
+function getProducations(grammar){
+	return Reflect.ownKeys(grammar)
+}
+
+function getTerminals(grammar,productions){
+	let terminals = new Set()
+	for(let p of productions){
+		for(let produce of grammar[p]){
+			for(let t of produce)
+				if (!productions.includes(t))
+					terminals.add(t)
+		}
+	}
+	return Array.from(terminals)
+}
+
+function generatePDA(grammar,productions,terminals){
+	let automaton = new PDA("PDA from grammar", terminals)
+	automaton.addState('q0',true)
+	automaton.addState('q1')
+	automaton.addState('q2',false,true)
+	automaton.addTransition('epsilon,Z0/'+productions[0]+',Z1,Z0','q0','q1')
+	automaton.addTransition('epsilon,Z1/epsilon','q1','q2')
+	for(let p of productions){
+		for(let produce of grammar[p]){
+			automaton.addTransition('epsilon,'+p+'/'+produce.join(','),'q1','q1')
+		}
+	}
+	for(let t of terminals){
+		automaton.addTransition(t+','+t+'/epsilon','q1','q1')
+	}
+
+	return automaton
 }
 
 function objectToArray(obj) {

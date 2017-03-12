@@ -13,234 +13,250 @@
   <script type="text/javascript" src="./js/jQuery_v3_1_1.js"></script>
   <script type="text/javascript" src="./dist/bundle.js" charset="utf-8"></script>
   <script type="text/javascript" src="./js/vis/vis.js"></script>
-  
-
 </head>
 
 <body onload="init();">
 
-<div class="container">
-  <div class="row">
+  <div class="container">
+    <div class="row">
       <h3 class="text-center">Automaton</h3>
       <hr/>
+    </div>
+    <div class="row">
+      <div class="col-md-3 col-xs-12">
+        <div id="show-message"></div>
+
+        <div id="automaton">
+          <input id="automaton-name" class="form-control" value="" placeholder="name or description"/>
+          <input id="automaton-alphabet" class="form-control" value="" placeholder="alphabet"/>
+          <input id="automaton-word" class="form-control" value="" placeholder="word to try"/>
+          <input id="regex-automaton" class="form-control" value="" placeholder="regex to try"/>
+
+          <button id="clear-canvas" type="button" class="btn btn-danger btn-block">Clear</button>
+
+          <div class="panel-group panel-group-lists collapse in" id="accordion2" style="">
+            <div class="panel">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFour" class="collapsed">
+                    DFA
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseFour" class="panel-collapse collapse" style="height: 0px;">
+                <div class="panel-body">
+                  <button id="save-dfa" type="button" class="btn btn-success btn-block">Save</button>
+                  <button id="send-automaton-dfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
+                  <button id="convert-dfa-re" type="button" class="btn btn-warning btn-block">Convert to Regex</button>
+                  <button id="minimize-dfa" type="button" class="btn btn-warning btn-block">Minimize</button>
+                  <div id="dfa-automatons" class="row list-group"></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFive" class="collapsed">
+                    NFA
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseFive" class="panel-collapse collapse" style="height: 0px;">
+                <div class="panel-body">
+                  <button id="save-nfa" type="button" class="btn btn-success btn-block">Save</button>
+                  <button id="send-automaton-nfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
+                  <button id="convert-nfa-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
+                  <div id="nfa-automatons" class="row list-group"></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSix" class="collapsed">
+                    NFA-e
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseSix" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <button id="save-nfae" type="button" class="btn btn-success btn-block">Save</button>
+                  <button id="send-automaton-nfae" type="button" class="btn btn-primary btn-block">Evaluate</button>
+                  <button id="convert-nfae-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
+                  <div id="nfae-automatons" class="row list-group"></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven" class="collapsed">
+                    Regex
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseSeven" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <button id="save-regex" type="button" class="btn btn-success btn-block">Save</button>
+                  <button id="convert-regex-nfae" type="button" class="btn btn-warning btn-block">Convert to NFA-E</button>
+                  <div id="basic-regexes" class="row list-group"></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion2" href="#collapseEight" class="collapsed">
+                    Set Operations
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseEight" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <a id="union-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Union</a>
+                  <a id="intersection-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Intersection</a>
+                  <a id="difference-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Difference</a>
+                  <a id="complement-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Complement</a>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion2" href="#collapseNine" class="collapsed">
+                    PDA
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseNine" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <button id="save-pda" type="button" class="btn btn-success btn-block">Save</button>
+                  <button id="send-automaton-pda" type="button" class="btn btn-primary btn-block">Evaluate</button>
+                  <div id="show-transitions"></div>
+                  <div id="pda-automatons" class="row list-group"></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" data-parent="#accordion2" href="#collapseTen" class="collapsed">
+                    Grammar
+                  </a>
+                </h4>
+              </div>
+              <div id="collapseTen" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <input id="new-production" type="text" class="form-control" value="" placeholder="producion"/>
+                  <input id="new-produce" type="text" class="form-control" value="" placeholder="produce"/>
+                  <button id="add-production" class="btn btn-primary btn-block">Add</button>
+                  <button id="convert-to-pda" class="btn btn-warning btn-block">Convert to PDA</button>
+                  <textarea id="json-grammar" class="form-control" disabled="true"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9 col-xs-12">
+        <div id="mynetwork"></div>
+      </div>
+    </div>
+    <hr/>
+    <div id="content-panel-sbs" class="row"></div>
+    <div id="modals-container" class="row">
+      <div id="dfa-operation-modal" class="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 id="dfa-operation-title" class="modal-title">Union</h4>
+            </div>
+            <div class="modal-body">
+              <div class="selecter  multiple" tabindex="0">
+                <div id="selecter-dfa0" class="selecter-options"></div>
+                <div id="selecter-dfa1" class="selecter-options"></div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success generate-operation" data-dismiss="modal" value="save" id="Generate-union">Generate</button>
+              <button type="button" class="btn btn-default modal-cancel" data-dismiss="modal" value="cancel">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="node-popUp" class="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 id="node-operation" class="modal-title">Node</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-xs-6">
+                  <label>type</label>
+                  <input id="node-id" class="form-control" placeholder="start/end" type="text">
+                </div>
+                <div class="col-xs-6">
+                  <label>State Name</label>
+                  <input id="node-label" class="form-control" placeholder="name" type="text">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" value="save" id="node-saveButton">Send</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" value="cancel" id="node-cancelButton">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="edge-popUp" class="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 id="edge-operation" class="modal-title">Edge</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-xs-12">
+                  <label>Label</label>
+                  <input id="edge-label" class="form-control" placeholder="label" type="text">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" value="save" id="edge-saveButton">Send</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" value="cancel" id="edge-cancelButton">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="telakreiste-modal" class="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header"></div>
+            <div class="modal-body">
+              <div class="row">
+                <img class="img-responsive img-thumbnail center-block" src="./img/telakreistewey.jpg">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" value="save" id="confirm-stepByStep">OK</button>
+              <button type="button" class="btn btn-default modal-cancel" data-dismiss="modal" value="cancel" id="telakreiste-cancelButton">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="row">
-    <div class="col-md-3 col-xs-12">
-      <div id="show-message"></div>
 
-      <div id="automaton">
-        <input id="automaton-name" class="form-control" value="" placeholder="name or description"/>
-        <input id="automaton-alphabet" class="form-control" value="" placeholder="alphabet"/>
-        <input id="automaton-word" class="form-control" value="" placeholder="word to try"/>
-        <input id="regex-automaton" class="form-control" value="" placeholder="regex to try"/>
-
-        <button id="clear-canvas" type="button" class="btn btn-danger btn-block">Clear</button>
-
-        <div class="panel-group panel-group-lists collapse in" id="accordion2" style="">
-          <div class="panel">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFour" class="collapsed">
-                  DFA
-                </a>
-              </h4>
-            </div>
-            <div id="collapseFour" class="panel-collapse collapse" style="height: 0px;">
-              <div class="panel-body">
-                <button id="save-dfa" type="button" class="btn btn-success btn-block">Save</button>
-                <button id="send-automaton-dfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
-                <button id="convert-dfa-re" type="button" class="btn btn-warning btn-block">Convert to Regex</button>
-                <button id="minimize-dfa" type="button" class="btn btn-warning btn-block">Minimize</button>
-                <div id="dfa-automatons" class="row list-group"></div>
-              </div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseFive" class="collapsed">
-                  NFA
-                </a>
-              </h4>
-            </div>
-            <div id="collapseFive" class="panel-collapse collapse" style="height: 0px;">
-              <div class="panel-body">
-                <button id="save-nfa" type="button" class="btn btn-success btn-block">Save</button>
-                <button id="send-automaton-nfa" type="button" class="btn btn-primary btn-block">Evaluate</button>
-                <button id="convert-nfa-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
-                <div id="nfa-automatons" class="row list-group"></div>
-              </div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSix" class="collapsed">
-                  NFA-e
-                </a>
-              </h4>
-            </div>
-            <div id="collapseSix" class="panel-collapse collapse">
-              <div class="panel-body">
-                <button id="save-nfae" type="button" class="btn btn-success btn-block">Save</button>
-                <button id="send-automaton-nfae" type="button" class="btn btn-primary btn-block">Evaluate</button>
-                <button id="convert-nfae-dfa" type="button" class="btn btn-warning btn-block">Convert to DFA</button>
-                <div id="nfae-automatons" class="row list-group"></div>
-              </div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseSeven" class="collapsed">
-                  Regex
-                </a>
-              </h4>
-            </div>
-            <div id="collapseSeven" class="panel-collapse collapse">
-              <div class="panel-body">
-                <button id="save-regex" type="button" class="btn btn-success btn-block">Save</button>
-                <button id="convert-regex-nfae" type="button" class="btn btn-warning btn-block">Convert to NFA-E</button>
-                <div id="basic-regexes" class="row list-group"></div>
-              </div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseEight" class="collapsed">
-                  Set Operations
-                </a>
-              </h4>
-            </div>
-            <div id="collapseEight" class="panel-collapse collapse">
-              <div class="panel-body">
-                <a id="union-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Union</a>
-                <a id="intersection-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Intersection</a>
-                <a id="difference-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Difference</a>
-                <a id="complement-dfa" href="#dfa-operation-modal" class="btn btn-warning btn-block model-invok">Complement</a>
-              </div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-heading">
-              <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion2" href="#collapseNine" class="collapsed">
-                  PDA
-                </a>
-              </h4>
-            </div>
-            <div id="collapseNine" class="panel-collapse collapse">
-              <div class="panel-body">
-                <button id="save-pda" type="button" class="btn btn-success btn-block">Save</button>
-                <button id="send-automaton-pda" type="button" class="btn btn-primary btn-block">Evaluate</button>
-                <div id="show-transitions"></div>
-                <div id="pda-automatons" class="row list-group"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-9 col-xs-12">
-      <div id="mynetwork"></div>
-    </div>
-  </div>
-  <hr/>
-  <div id="content-panel-sbs" class="row"></div>
-  <div id="modals-container" class="row">
-    <div id="dfa-operation-modal" class="modal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 id="dfa-operation-title" class="modal-title">Union</h4>
-          </div>
-          <div class="modal-body">
-            <div class="selecter  multiple" tabindex="0">
-              <div id="selecter-dfa0" class="selecter-options"></div>
-              <div id="selecter-dfa1" class="selecter-options"></div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-success generate-operation" data-dismiss="modal" value="save" id="Generate-union">Generate</button>
-            <button type="button" class="btn btn-default modal-cancel" data-dismiss="modal" value="cancel">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="node-popUp" class="modal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 id="node-operation" class="modal-title">Node</h4>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-xs-6">
-                <label>type</label>
-                <input id="node-id" class="form-control" placeholder="start/end" type="text">
-              </div>
-              <div class="col-xs-6">
-                <label>State Name</label>
-                <input id="node-label" class="form-control" placeholder="name" type="text">
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-success" value="save" id="node-saveButton">Send</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal" value="cancel" id="node-cancelButton">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="edge-popUp" class="modal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 id="edge-operation" class="modal-title">Edge</h4>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-xs-12">
-                <label>Label</label>
-                <input id="edge-label" class="form-control" placeholder="label" type="text">
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-success" value="save" id="edge-saveButton">Send</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal" value="cancel" id="edge-cancelButton">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="telakreiste-modal" class="modal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header"></div>
-          <div class="modal-body">
-            <div class="row">
-              <img class="img-responsive img-thumbnail center-block" src="./img/telakreistewey.jpg">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-success" value="save" id="confirm-stepByStep">OK</button>
-            <button type="button" class="btn btn-default modal-cancel" data-dismiss="modal" value="cancel" id="telakreiste-cancelButton">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script type="text/javascript" src="./js/bootstrap.min.js"></script>
-<script type="text/javascript" src="./js/visManipulation.js"></script>
-<script type="text/javascript" src="./js/persistent.js"></script>
-<script type="text/javascript" src="./js/evaluatorInterface.js"></script>
-<script type="text/javascript" src="./js/converterInterace.js"></script>
-<script type="text/javascript" src="./js/setOperationsInterface.js"></script>
+  <script type="text/javascript" src="./js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="./js/visManipulation.js"></script>
+  <script type="text/javascript" src="./js/persistent.js"></script>
+  <script type="text/javascript" src="./js/evaluatorInterface.js"></script>
+  <script type="text/javascript" src="./js/converterInterace.js"></script>
+  <script type="text/javascript" src="./js/setOperationsInterface.js"></script>
 </body>
 </html>

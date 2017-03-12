@@ -3,6 +3,40 @@ var nfa_automatons = localStorage.getItem('nfa')
 var nfae_automatons = localStorage.getItem('nfae')
 var regex_automatons = localStorage.getItem('regex')
 var pda_automatons = localStorage.getItem('pda')
+var currentGrammar = {
+	E: [
+		['E','+','T'],
+		['S']
+	],
+	S: [
+		['S','.','F'],
+		['T']
+	],
+	T: [
+		['T','*'],
+		['F']
+	],
+	F: [
+		['Num'],
+		['(','E',')']
+	],
+	Num: [
+		['Digito','Num'],
+		['Digito']
+	],
+	Digito: [
+		['0'],
+		['1'],
+		['2'],
+		['3'],
+		['4'],
+		['5'],
+		['6'],
+		['7'],
+		['8'],
+		['9']
+	]
+}
 
 dfa_automatons = dfa_automatons?(JSON.parse(dfa_automatons)).array:AutomatonJS.examples.getDFA()
 nfa_automatons = nfa_automatons?(JSON.parse(nfa_automatons)).array:AutomatonJS.examples.getNFA()
@@ -20,6 +54,9 @@ function getInputAlphabet(){return document.getElementById('automaton-alphabet')
 function getInputName(){return document.getElementById('automaton-name').value}
 function getInputWord(){return document.getElementById('automaton-word').value}
 function getInputRegex(){return document.getElementById('regex-automaton').value}
+function getProduction(){return document.getElementById('new-production').value}
+function getProduce(){return document.getElementById('new-produce').value}
+function getJsonGrammar(){return document.getElementById('json-grammar')}
 
 
 
@@ -168,4 +205,16 @@ $('#clear-canvas').on('click', e => {
   showAutomatonInfo("","")
   document.getElementById('automaton-word').value = ""
   document.getElementById('regex-automaton').value = ""
+})
+
+$('#add-production').on('click', e => {
+	let production = getProduction()
+	let produce = getProduce()
+	if(!currentGrammar[production]){
+		currentGrammar[production] = []
+	}
+	currentGrammar[production].push(produce.split(','))
+	
+	let jsonGrammar = getJsonGrammar()
+	jsonGrammar.value = JSON.stringify(currentGrammar, undefined, 2)
 })
