@@ -1,6 +1,7 @@
 import DFA from "./DFA.js"
 import NFA from "./NFA.js"
 import NFAe from "./NFA-e.js"
+import PDA from "./PDA.js"
 
 const automDFA = new DFA("dfa-tres ceros seguidos", ['0','1'])
 const automDFA_str1 = "0100101011"
@@ -177,6 +178,50 @@ const regex1 = {regex: "(1+0.(0)*.1)*", name: "termina en 1"}
 const regex2 = {regex: "(0.(0)*)+(1)", name: "muchos ceros o un uno"}
 const regex3 = {regex: "(0+1)*.1.(0+1).(0+1)", name: "antepenultino 1"}
 
+//PDA
+const ceros_unos_orden = new PDA("0^n 1^n",['0','1'])
+ceros_unos_orden.addState('q0',true)
+ceros_unos_orden.addState('q1')
+ceros_unos_orden.addState('q2',false,true)
+
+ceros_unos_orden.addTransition('0,Z0/X,Z0','q0','q0')
+ceros_unos_orden.addTransition('0,X/X,X','q0','q0')
+ceros_unos_orden.addTransition('1,X/epsilon','q0','q1')
+ceros_unos_orden.addTransition('epsilon,Z0/Z0','q0','q1')
+ceros_unos_orden.addTransition('1,X/epsilon','q1','q1')
+ceros_unos_orden.addTransition('epsilon,Z0/Z0','q1','q2')
+
+const parentesis = new PDA("consume parentesis",['(',')'])
+parentesis.addState('q0',true,true)
+parentesis.addState('q1')
+parentesis.addTransition('epsilon,epsilon/$','q0','q1')
+parentesis.addTransition('epsilon,$/epsilon','q1','q0')
+parentesis.addTransition('(,epsilon/*','q1','q1')
+parentesis.addTransition('),*/epsilon','q1','q1')
+
+const palindromoPar = new PDA("ww^r",['0','1'])
+palindromoPar.addState('q0',true)
+palindromoPar.addState('q1')
+palindromoPar.addState('q2')
+palindromoPar.addState('q3',false,true)
+
+palindromoPar.addTransition('0,Z0/0,Z0','q0','q0')
+palindromoPar.addTransition('0,0/0,0','q0','q0')
+palindromoPar.addTransition('1,0/1,0','q0','q0')
+palindromoPar.addTransition('1,1/1,1','q0','q0')
+palindromoPar.addTransition('1,Z0/Z0','q0','q0')
+palindromoPar.addTransition('0,1/0,1','q0','q0')
+
+palindromoPar.addTransition('0,0/epsilon','q1','q1')
+palindromoPar.addTransition('1,1/epsilon','q2','q2')
+
+palindromoPar.addTransition('epsilon,0/0','q0','q1')
+palindromoPar.addTransition('epsilon,1/1','q0','q2')
+palindromoPar.addTransition('1,1/epsilon','q1','q2')
+palindromoPar.addTransition('0,0/epsilon','q2','q1')
+palindromoPar.addTransition('epsilon,Z0/Z0','q1','q3')
+palindromoPar.addTransition('epsilon,Z0/Z0','q2','q3')
+
 exports.getDFA = function getDFA(){
 	let listToLoad = [automDFA,automDFA2,comienzaEnCero,toMinimize,DFAposhitoLoco]
 	listToLoad = listToLoad.map(x => {
@@ -206,4 +251,13 @@ exports.getNFAe = function getNFAe(){
 
 exports.getRegex = function getRegex(){
 	return [regex1,regex2,regex3]
+}
+
+exports.getPDA = function getPDA(){
+	let listToLoad = [ceros_unos_orden,parentesis,palindromoPar]
+	listToLoad = listToLoad.map(x => {
+		return {name: x.name,
+				alphabet: Array.from(x.alphabet),
+				dataset: x.toDataSet()}})
+	return listToLoad
 }

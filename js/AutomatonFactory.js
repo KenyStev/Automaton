@@ -1,6 +1,7 @@
 import DFA from "./DFA"
 import NFA from "./NFA"
 import NFAe from "./NFA-e"
+import PDA from "./PDA"
 import Parser from "./regular-expression-parser/regular-expression"
 
 var seed = 0
@@ -73,6 +74,24 @@ export function NewNFAe(data, name, alphabet) {
 	return NFAeutomaton
 }
 
+export function NewPDA(data, name, alphabet) {
+	const PDAeutomaton = new PDA(name, alphabet)
+	let states = objectToArray(('_data' in data.nodes)?data.nodes._data:data.nodes)
+	states.forEach(state => {
+		PDAeutomaton.addState(state.label,
+			state.nodeId.toString().indexOf("start")!==-1,
+			state.nodeId.toString().indexOf("end")!==-1)
+	})
+
+	let transitions = objectToArray(('_data' in data.edges)?data.edges._data:data.edges)
+	transitions.forEach(transition => {
+		PDAeutomaton.addTransition(transition.label,
+			getState(data,transition.from).label, getState(data,transition.to).label)
+	})
+
+	return PDAeutomaton
+}
+
 export function regexToNFAe(regex){
 	seed = 0
 	let stepByStep = regexToNFAe_STEPS(regex)
@@ -104,6 +123,12 @@ export function differenceAutomaton(dfa0,dfa1){
 export function complementAutomaton(dfa){
 	let complemented = changeFinalStates("complement: "+dfa.name,dfa)
 	return lookForSink(complemented)
+}
+
+export function grammarToPDA(grammar){
+	let productions = getProducations(grammar)
+	let terminals = getTerminals(grammar,productions)
+	return generatePDA(grammar,productions,terminals)
 }
 
 //operaciones con automatas
@@ -353,6 +378,42 @@ function getNFAEconcat(nfae0,nfae1){
 	nfae.addTransition(epsilon,finalState0.label,initialState1.label)
 
 	return nfae
+}
+
+//Grammar to PDA
+function getProducations(grammar){
+	return Reflect.ownKeys(grammar)
+}
+
+function getTerminals(grammar,productions){
+	let terminals = new Set()
+	for(let p of productions){
+		for(let produce of grammar[p]){
+			for(let t of produce)
+				if (!productions.includes(t))
+					terminals.add(t)
+		}
+	}
+	return Array.from(terminals)
+}
+
+function generatePDA(grammar,productions,terminals){
+	let automaton = new PDA("PDA from grammar", terminals)
+	automaton.addState('q0',true)
+	automaton.addState('q1')
+	automaton.addState('q2',false,true)
+	automaton.addTransition('epsilon,Z0/'+productions[0]+',Z1,Z0','q0','q1')
+	automaton.addTransition('epsilon,Z1/epsilon','q1','q2')
+	for(let p of productions){
+		for(let produce of grammar[p]){
+			automaton.addTransition('epsilon,'+p+'/'+produce.join(','),'q1','q1')
+		}
+	}
+	for(let t of terminals){
+		automaton.addTransition(t+','+t+'/epsilon','q1','q1')
+	}
+
+	return automaton
 }
 
 function objectToArray(obj) {

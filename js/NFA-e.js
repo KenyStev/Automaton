@@ -4,7 +4,8 @@ import { UnknownCharError,
 		UnknownStateError, 
 		DeterminismError, 
 		StateAlreadyExistError,
-		NextTransitionError 
+		NextTransitionError,
+		NotValidWordError
 } from "./errors"
 
 const epsilon = "epsilon"
@@ -48,7 +49,13 @@ export default class NFAe extends Automaton{
 		return Array.from(new Set(states))
 	}
 
-	match(w,currentStates){
+	match(w){
+		let finalState = this.matchStates(w,[this.getInitialState()])
+		if (!finalState)	throw new NotValidWordError(w)
+		return finalState
+	}
+
+	matchStates(w,currentStates){
 		let clausuras = []
 		currentStates.forEach(currentState => {
 			let tempClausuras = this.clausura(currentState)
@@ -65,7 +72,7 @@ export default class NFAe extends Automaton{
 			})
 			if (statesTo.size==0)
 				throw new NextTransitionError(a)
-			return this.match(w.substring(1,w.length),Array.from(statesTo))
+			return this.matchStates(w.substring(1,w.length),Array.from(statesTo))
 		}
 		return clausuras.filter(x => x.isFinal)[0]
 	}

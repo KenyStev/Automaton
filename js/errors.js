@@ -33,3 +33,9 @@ export class AlreadyMinimizedError extends Error {
         super(`The automaton: '${name}' is already minimized.`)
     }
 }
+
+export class NotValidWordError extends Error {
+    constructor(word) {
+        super(`The word: '${word}' is not valid.`)
+    }
+}

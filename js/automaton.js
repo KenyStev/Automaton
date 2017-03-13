@@ -114,6 +114,13 @@ export class Transition {
 		}
 		return false
 	}
+
+	ableToPop(symbol,popvalue){
+		let values = this.label.split('/')
+		let leftValue = values[0].split(',')
+		let rightValue = values[1].split(',')
+		return leftValue[0] ==  symbol && leftValue[1] == popvalue
+	}
 }
 
 function getStateColor(state) {

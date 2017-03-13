@@ -4,7 +4,8 @@ import { UnknownCharError,
 		UnknownStateError, 
 		DeterminismError, 
 		StateAlreadyExistError,
-		NextTransitionError 
+		NextTransitionError,
+		NotValidWordError
 } from "./errors"
 
 export default class NFA extends Automaton{
@@ -34,7 +35,13 @@ export default class NFA extends Automaton{
 		from.addTransition(new Transition(transitionName,fromName,toName))
 	}
 
-	match(w,currentState){
+	match(w){
+		let finalState = this.matchState(w,this.getInitialState())
+		if (!finalState) throw new NotValidWordError(w)
+		return finalState
+	}
+
+	matchState(w,currentState){
 		if (w.length>0) {
 			let a = w.charAt(0)
 			let transitions = currentState.transitions.filter(e => e.match(a))
@@ -47,7 +54,7 @@ export default class NFA extends Automaton{
 					let returnState = null
 					for(let state of statesTo){
 						if (!returnState){
-							returnState = this.match(w.substring(1,w.length),state)
+							returnState = this.matchState(w.substring(1,w.length),state)
 							if (returnState!=null && !returnState.isFinal)
 								returnState = null
 						}
