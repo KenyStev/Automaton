@@ -390,7 +390,7 @@ function getTerminals(grammar,productions){
 	for(let p of productions){
 		for(let produce of grammar[p]){
 			for(let t of produce)
-				if (!productions.includes(t))
+				if (t!=epsilon && !productions.includes(t))
 					terminals.add(t)
 		}
 	}
