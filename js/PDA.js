@@ -137,10 +137,6 @@ export default class PDA extends Automaton{
 		})
 		console.log(JSON.stringify(grammar,undefined,2))
 		return grammar
-
-		// console.log(JSON.stringify(grammar,undefined,2))
-		// console.log(JSON.stringify(stepTwo,undefined,2))
-		// console.log(JSON.stringify(stepThree,undefined,2))
 	}
 
 	getStepOne(){

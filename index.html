@@ -132,26 +132,9 @@
                 <div class="panel-body">
                   <button id="save-pda" type="button" class="btn btn-success btn-block">Save</button>
                   <button id="send-automaton-pda" type="button" class="btn btn-primary btn-block">Evaluate</button>
+                  <button id="convert-to-grammar" class="btn btn-warning btn-block">Convert to Grammar</button>
                   <div id="show-transitions"></div>
                   <div id="pda-automatons" class="row list-group"></div>
-                </div>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" data-parent="#accordion2" href="#collapseTen" class="collapsed">
-                    Grammar
-                  </a>
-                </h4>
-              </div>
-              <div id="collapseTen" class="panel-collapse collapse">
-                <div class="panel-body">
-                  <input id="new-production" type="text" class="form-control" value="" placeholder="producion"/>
-                  <input id="new-produce" type="text" class="form-control" value="" placeholder="produce"/>
-                  <button id="add-production" class="btn btn-primary btn-block">Add</button>
-                  <button id="convert-to-pda" class="btn btn-warning btn-block">Convert to PDA</button>
-                  <textarea id="json-grammar" class="form-control" disabled="true"></textarea>
                 </div>
               </div>
             </div>
@@ -159,7 +142,28 @@
         </div>
       </div>
       <div class="col-md-9 col-xs-12">
-        <div id="mynetwork"></div>
+        <div class="panel">
+          <ul id="myTab1" class="nav nav-tabs nav-justified">
+            <li class="active"><a href="#graph" data-toggle="tab">Graph</a></li>
+            <li class=""><a href="#grammar-inputs" data-toggle="tab">Grammar</a></li>
+          </ul>
+          <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="graph">
+              <div id="mynetwork"></div>
+            </div>
+            <div class="tab-pane fade" id="grammar-inputs">
+              <input id="new-production" type="text" class="form-control" value="" placeholder="producion"/>
+              <input id="new-produce" type="text" class="form-control" value="" placeholder="produce"/>
+              <button id="add-production" class="btn btn-primary btn-block">Add</button>
+              <button id="convert-to-pda" class="btn btn-warning btn-block">Convert to PDA</button>
+              <button id="update-json-grammar" class="btn btn-success btn-block">Update</button>
+              <div class="row center-block">
+              <textarea id="show-grammar" class="col-md-6 col-xs-12" disabled="true"></textarea>
+                <textarea id="json-grammar" class="col-md-6 col-xs-12"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <hr/>

@@ -3,7 +3,8 @@ var nfa_automatons = localStorage.getItem('nfa')
 var nfae_automatons = localStorage.getItem('nfae')
 var regex_automatons = localStorage.getItem('regex')
 var pda_automatons = localStorage.getItem('pda')
-var currentGrammar = {
+var currentGrammar = {}
+var grammarExample = {
 	E: [
 		['E','+','S'],
 		['S']
@@ -180,6 +181,30 @@ function loadAutomaton(id,mode){
 	currentAutomaton = example
 }
 
+function updateGrammar(newGrammar){
+	let jsonGrammar = getJsonGrammar()
+	jsonGrammar.value = JSON.stringify(newGrammar, undefined, 2)
+	showGrammar(newGrammar)
+	currentGrammar = newGrammar
+}
+
+function showGrammar(jsonGrammar){
+	let toShow = ''
+	let productions = Reflect.ownKeys(jsonGrammar)
+	productions.forEach(production => {
+		toShow += production + ' -> '
+		jsonGrammar[production].forEach((produce, index) => {
+			if (index==0)
+				toShow += produce.join(' ')
+			else
+				toShow += '\t| ' + produce.join(' ')
+			toShow+='\n'
+		})
+		toShow += '\n'
+	})
+	document.getElementById('show-grammar').value = toShow
+}
+
 $('#save-dfa').on('click',e => {
 	saveAutomaton("DFA")
 })
@@ -203,8 +228,13 @@ $('#save-regex').on('click',e => {
 $('#clear-canvas').on('click', e => {
   network.setData({})
   showAutomatonInfo("","")
+  currentGrammar = {}
   document.getElementById('automaton-word').value = ""
   document.getElementById('regex-automaton').value = ""
+  document.getElementById('new-production').value = ""
+  document.getElementById('new-produce').value = ""
+  document.getElementById('json-grammar').value = ""
+  document.getElementById('show-grammar').value = ""
 })
 
 $('#add-production').on('click', e => {
@@ -215,6 +245,11 @@ $('#add-production').on('click', e => {
 	}
 	currentGrammar[production].push(produce.split(','))
 	
+	updateGrammar(currentGrammar)
+})
+
+$('#update-json-grammar').on('click',e => {
 	let jsonGrammar = getJsonGrammar()
-	jsonGrammar.value = JSON.stringify(currentGrammar, undefined, 2)
+	currentGrammar = JSON.parse(jsonGrammar.value)
+	showGrammar(currentGrammar)
 })
