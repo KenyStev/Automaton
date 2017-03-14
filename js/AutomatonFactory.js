@@ -2,6 +2,7 @@ import DFA from "./DFA"
 import NFA from "./NFA"
 import NFAe from "./NFA-e"
 import PDA from "./PDA"
+import Turing from "./Turing"
 import Parser from "./regular-expression-parser/regular-expression"
 
 var seed = 0
@@ -90,6 +91,24 @@ export function NewPDA(data, name, alphabet) {
 	})
 
 	return PDAeutomaton
+}
+
+export function NewTuring(data, name, alphabet) {
+	const turing_new = new Turing(name, alphabet)
+	let states = objectToArray(('_data' in data.nodes)?data.nodes._data:data.nodes)
+	states.forEach(state => {
+		turing_new.addState(state.label,
+			state.nodeId.toString().indexOf("start")!==-1,
+			state.nodeId.toString().indexOf("end")!==-1)
+	})
+
+	let transitions = objectToArray(('_data' in data.edges)?data.edges._data:data.edges)
+	transitions.forEach(transition => {
+		turing_new.addTransition(transition.label,
+			getState(data,transition.from).label, getState(data,transition.to).label)
+	})
+
+	return turing_new
 }
 
 export function regexToNFAe(regex){

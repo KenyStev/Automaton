@@ -3,6 +3,7 @@ var nfa_automatons = localStorage.getItem('nfa')
 var nfae_automatons = localStorage.getItem('nfae')
 var regex_automatons = localStorage.getItem('regex')
 var pda_automatons = localStorage.getItem('pda')
+var turing_machines = localStorage.getItem('turing')
 var currentGrammar = {}
 var grammarExample = {
 	E: [
@@ -44,12 +45,14 @@ nfa_automatons = nfa_automatons?(JSON.parse(nfa_automatons)).array:AutomatonJS.e
 nfae_automatons = nfae_automatons?(JSON.parse(nfae_automatons)).array:AutomatonJS.examples.getNFAe()
 regex_automatons = regex_automatons?(JSON.parse(regex_automatons)).array:AutomatonJS.examples.getRegex()
 pda_automatons = pda_automatons?(JSON.parse(pda_automatons)).array:AutomatonJS.examples.getPDA()
+turing_machines = turing_machines?(JSON.parse(turing_machines)).array:AutomatonJS.examples.getTuring()
 
 updateList("DFA")
 updateList("NFA")
 updateList("NFAe")
 updateList("regex")
 updateList("PDA")
+updateList("turing")
 
 function getInputAlphabet(){return document.getElementById('automaton-alphabet').value.split(',')}
 function getInputName(){return document.getElementById('automaton-name').value}
@@ -102,6 +105,14 @@ function saveAutomaton (mode) {
 	    }else if (mode == "regex") {
 	    	regex_automatons.push({regex: getInputRegex(), name: getInputName()})
 	    	localStorage.setItem('regex',JSON.stringify({array: regex_automatons}))
+	    }else if (mode == "turing") {
+	    	automaton = AutomatonJS.NewTuring(network.body.data,name,alphabet)
+			turing_machines.push({
+				name: automaton.name,
+				alphabet: Array.from(automaton.alphabet),
+				dataset: automaton.toDataSet()
+			})
+			localStorage.setItem('turing',JSON.stringify({array: turing_machines}))
 	    }
 
 	    updateList(mode)
@@ -139,6 +150,10 @@ function updateList(mode){
 		document.getElementById('basic-regexes').innerHTML = `
 			${generateItems(regex_automatons,mode)}
 		`
+	}else if (mode=="turing") {
+		document.getElementById('turing-machines').innerHTML = `
+			${generateItems(turing_machines,mode)}
+		`
 	}
 }
 
@@ -171,6 +186,10 @@ function loadAutomaton(id,mode){
 	else if (mode=="PDA"){
 		example = pda_automatons[id]
 		example = AutomatonJS.NewPDA(example.dataset,example.name,example.alphabet)
+	}
+	else if (mode=="turing"){
+		example = turing_machines[id]
+		example = AutomatonJS.NewTuring(example.dataset,example.name,example.alphabet)
 	}
 	else if (mode=="regex"){
 		showRegexInfo(regex_automatons[id])
@@ -219,6 +238,10 @@ $('#save-nfae').on('click',e => {
 
 $('#save-pda').on('click',e => {
 	saveAutomaton("PDA")
+})
+
+$('#save-turing').on('click',e => {
+	saveAutomaton("turing")
 })
 
 $('#save-regex').on('click',e => {

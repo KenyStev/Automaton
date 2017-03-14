@@ -2,6 +2,7 @@ import DFA from "./DFA.js"
 import NFA from "./NFA.js"
 import NFAe from "./NFA-e.js"
 import PDA from "./PDA.js"
+import Turing from "./Turing.js"
 
 const automDFA = new DFA("dfa-tres ceros seguidos", ['0','1'])
 const automDFA_str1 = "0100101011"
@@ -222,6 +223,25 @@ palindromoPar.addTransition('0,0/epsilon','q2','q1')
 palindromoPar.addTransition('epsilon,Z0/Z0','q1','q3')
 palindromoPar.addTransition('epsilon,Z0/Z0','q2','q3')
 
+//Turing
+const Turing_0n1n = new Turing("Turing_0n1n",['0','1'])
+Turing_0n1n.addState('q0',true)
+Turing_0n1n.addState('q1')
+Turing_0n1n.addState('q2')
+Turing_0n1n.addState('q3')
+Turing_0n1n.addState('q4',false,true)
+
+Turing_0n1n.addTransition('0/X ->','q0','q1')
+Turing_0n1n.addTransition('0/0 ->','q1','q1')
+Turing_0n1n.addTransition('Y/Y ->','q1','q1')
+Turing_0n1n.addTransition('1/Y <-','q1','q2')
+Turing_0n1n.addTransition('Y/Y <-','q2','q2')
+Turing_0n1n.addTransition('0/0 <-','q2','q2')
+Turing_0n1n.addTransition('X/X ->','q2','q0')
+Turing_0n1n.addTransition('Y/Y ->','q0','q3')
+Turing_0n1n.addTransition('Y/Y ->','q3','q3')
+Turing_0n1n.addTransition('B/B <-','q3','q4')
+
 exports.getDFA = function getDFA(){
 	let listToLoad = [automDFA,automDFA2,comienzaEnCero,toMinimize,DFAposhitoLoco]
 	listToLoad = listToLoad.map(x => {
@@ -255,6 +275,15 @@ exports.getRegex = function getRegex(){
 
 exports.getPDA = function getPDA(){
 	let listToLoad = [ceros_unos_orden,parentesis,palindromoPar]
+	listToLoad = listToLoad.map(x => {
+		return {name: x.name,
+				alphabet: Array.from(x.alphabet),
+				dataset: x.toDataSet()}})
+	return listToLoad
+}
+
+exports.getTuring = function getTuring(){
+	let listToLoad = [Turing_0n1n]
 	listToLoad = listToLoad.map(x => {
 		return {name: x.name,
 				alphabet: Array.from(x.alphabet),

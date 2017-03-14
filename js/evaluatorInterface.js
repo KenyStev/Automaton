@@ -15,6 +15,10 @@ function evaluatePDA(event){
   evaluate(event,"PDA")
 }
 
+function evaluateTuring(event){
+  evaluate(event,"turing")
+}
+
 function evaluate(event,mode){
 	let alphabet = document.getElementById('automaton-alphabet').value
 	alphabet = alphabet.split(',')
@@ -36,6 +40,9 @@ function evaluate(event,mode){
       finalState = automaton.match(word)
     }else if (mode == "PDA") {
       automaton = AutomatonJS.NewPDA(network.body.data,name,alphabet)
+      finalState = automaton.match(word)
+    }else if (mode == "turing") {
+      automaton = AutomatonJS.NewTuring(network.body.data,name,alphabet)
       finalState = automaton.match(word)
     }
 
@@ -69,4 +76,7 @@ $('#send-automaton-nfae').on('click', e => {
 })
 $('#send-automaton-pda').on('click', e => {
   evaluatePDA(e)
+})
+$('#send-turing').on('click', e => {
+  evaluateTuring(e)
 })

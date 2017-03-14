@@ -6,6 +6,7 @@ import {
 , 	NewNFA
 ,	NewNFAe
 ,	NewPDA
+,	NewTuring
 ,	regexToNFAe
 ,	regexToNFAe_STEPS
 ,	unionAutomaton
@@ -22,6 +23,7 @@ exports.NewDFA = NewDFA;
 exports.NewNFA = NewNFA;
 exports.NewNFAe = NewNFAe;
 exports.NewPDA = NewPDA;
+exports.NewTuring = NewTuring;
 exports.regexToNFAe = regexToNFAe;
 exports.regexToNFAe_STEPS = regexToNFAe_STEPS;
 exports.unionAutomaton = unionAutomaton;
